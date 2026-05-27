@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>脱記号化教会の制度設計｜第6章｜脱記号化教会論</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500&family=Shippori+Antique+B1&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f1ea;
+    --bg-warm: #ece7db;
+    --paper: #f9f6ef;
+    --ink: #1c1810;
+    --ink-soft: #362e20;
+    --ink-muted: #74685a;
+    --accent: #6b3a2a;
+    --accent-light: #a05a3a;
+    --accent-gold: #9a7a2a;
+    --accent-green: #3a6a3a;
+    --rule: #c8bfae;
+    --highlight: #e4dcd0;
+    --font-base: 17px;
+    --line-height: 2.1;
+    --chapter-width: 700px;
+    --side-pad: clamp(24px, 8vw, 120px);
+  }
+  body.dark {
+    --bg: #100e0a;
+    --bg-warm: #1a1812;
+    --paper: #201c16;
+    --ink: #e8e0d0;
+    --ink-soft: #c4baa8;
+    --ink-muted: #78685a;
+    --accent: #c86040;
+    --accent-light: #e08858;
+    --accent-gold: #c8a040;
+    --accent-green: #68aa68;
+    --rule: #3a3020;
+    --highlight: #2a2418;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:'Shippori Mincho','Noto Serif JP',serif;
+    font-size:var(--font-base);line-height:var(--line-height);
+    -webkit-font-smoothing:antialiased;
+    transition:background .3s,color .3s;
+  }
+
+  #toolbar{
+    position:fixed;top:0;left:0;right:0;height:52px;
+    background:var(--paper);border-bottom:1px solid var(--rule);
+    display:flex;align-items:center;padding:0 20px;gap:10px;z-index:100;
+    transition:background .3s,border-color .3s;
+  }
+  .tool-label{font-size:11px;color:var(--ink-muted);letter-spacing:.08em;font-family:'JetBrains Mono',monospace;user-select:none;white-space:nowrap}
+  .tool-btn{
+    background:var(--bg-warm);border:1px solid var(--rule);color:var(--ink-soft);
+    padding:5px 12px;font-family:inherit;font-size:13px;cursor:pointer;
+    border-radius:3px;transition:all .15s;min-height:32px;min-width:32px;white-space:nowrap;
+  }
+  .tool-btn:hover{background:var(--highlight);color:var(--ink)}
+  .tool-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .tool-sep{width:1px;height:24px;background:var(--rule);margin:0 2px}
+  .tool-spacer{flex:1}
+  #font-size-display{font-size:12px;color:var(--ink-muted);min-width:26px;text-align:center}
+
+  #progress-bar{
+    position:fixed;top:52px;left:0;height:2px;
+    background:var(--accent-light);width:0%;transition:width .1s linear;z-index:99;
+  }
+
+  #main{
+    max-width:var(--chapter-width);margin:0 auto;
+    padding:96px var(--side-pad) 120px;
+  }
+
+  .book-meta{display:flex;align-items:center;gap:12px;margin-bottom:52px;padding-bottom:24px;border-bottom:1px solid var(--rule)}
+  .book-meta-chapter{font-size:11px;letter-spacing:.15em;font-family:'JetBrains Mono',monospace;color:var(--ink-muted)}
+  .book-meta-sep{color:var(--rule)}
+  .book-meta-title{font-size:12px;color:var(--ink-muted);font-weight:400}
+
+  .chapter-header{margin-bottom:60px}
+  .chapter-number{font-size:11px;letter-spacing:.2em;font-family:'JetBrains Mono',monospace;color:var(--accent-light);margin-bottom:20px;display:block}
+  .chapter-title{
+    font-family:'Shippori Antique B1','Shippori Mincho',serif;
+    font-size:clamp(24px,5vw,36px);font-weight:400;line-height:1.45;
+    color:var(--ink);letter-spacing:.06em;margin-bottom:24px;
+  }
+  .chapter-subtitle{
+    font-size:15px;color:var(--ink-muted);font-weight:400;
+    letter-spacing:.04em;border-left:2px solid var(--accent-light);
+    padding-left:16px;line-height:1.7;
+  }
+
+  .scripture{
+    background:var(--bg-warm);border-left:3px solid var(--accent);
+    padding:26px 30px;margin:48px 0;border-radius:0 4px 4px 0;position:relative;
+  }
+  .scripture::before{content:'✦';position:absolute;top:18px;right:18px;color:var(--accent);opacity:.22;font-size:16px}
+  .scripture-text{font-size:1.03em;line-height:2.0;color:var(--ink-soft);font-style:italic;margin-bottom:10px}
+  .scripture-ref{font-size:.84em;color:var(--ink-muted);letter-spacing:.06em}
+
+  .prose p{margin-bottom:1.6em;text-align:justify;text-justify:inter-ideograph;hanging-punctuation:first last;word-break:break-all;overflow-wrap:break-word}
+  .prose p.lead{font-size:1.07em;color:var(--ink-soft);line-height:2.2;margin-bottom:2em}
+
+  .section-heading{
+    font-family:'Shippori Antique B1','Shippori Mincho',serif;
+    font-size:1.2em;font-weight:400;color:var(--ink);
+    letter-spacing:.08em;margin:64px 0 28px;
+    padding-bottom:12px;border-bottom:1px solid var(--rule);
+    display:flex;align-items:baseline;gap:12px;
+  }
+  .section-heading::before{content:attr(data-num);font-size:.7em;color:var(--accent-light);letter-spacing:.1em;font-family:'Shippori Mincho',serif;min-width:28px}
+
+  .concept-box{border:1px solid var(--rule);padding:26px 30px;margin:44px 0;background:var(--paper);position:relative}
+  .concept-box-label{position:absolute;top:-10px;left:18px;background:var(--paper);padding:0 8px;font-size:11px;letter-spacing:.12em;color:var(--accent-light)}
+  .concept-box-title{font-size:1.08em;font-weight:600;margin-bottom:12px;color:var(--ink);letter-spacing:.06em}
+  .concept-box p{font-size:.92em;color:var(--ink-soft);line-height:2.0;margin-bottom:.8em}
+  .concept-box p:last-child{margin-bottom:0}
+
+  .pull-quote{margin:52px 0;text-align:center}
+  .pull-quote-text{
+    font-family:'Shippori Antique B1','Shippori Mincho',serif;
+    font-size:clamp(16px,3vw,21px);color:var(--ink-soft);
+    line-height:1.95;letter-spacing:.08em;padding:0 24px;display:inline-block;
+  }
+  .pull-quote-text::before,.pull-quote-text::after{content:'';display:block;width:40px;height:1px;background:var(--accent-light);margin:14px auto}
+
+  /* CONSTITUTION TABLE */
+  .constitution{margin:48px 0;border:1px solid var(--rule);overflow:hidden}
+  .constitution-header{
+    background:var(--bg-warm);padding:14px 22px;
+    font-size:11px;letter-spacing:.15em;color:var(--ink-muted);
+    border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;
+  }
+  .constitution-header span{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:.04em}
+  .constitution-article{
+    padding:20px 24px;border-bottom:1px solid var(--rule);
+    display:grid;grid-template-columns:80px 1fr;gap:16px;align-items:start;
+  }
+  .constitution-article:last-child{border-bottom:none}
+  .constitution-article:hover{background:var(--highlight)}
+  .article-num{
+    font-size:11px;letter-spacing:.1em;color:var(--accent-light);
+    padding-top:3px;font-family:'Shippori Mincho',serif;
+  }
+  .article-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:6px;letter-spacing:.04em}
+  .article-body{font-size:.9em;color:var(--ink-soft);line-height:1.9}
+
+  /* SHABBAT CYCLE */
+  .cycle-diagram{
+    margin:44px 0;display:grid;
+    grid-template-columns:repeat(4,1fr);gap:0;
+    border:1px solid var(--rule);overflow:hidden;
+  }
+  .cycle-cell{
+    padding:22px 16px;border-right:1px solid var(--rule);
+    position:relative;
+  }
+  .cycle-cell:last-child{border-right:none}
+  .cycle-cell.center-return{background:var(--highlight)}
+  .cycle-num{
+    font-size:10px;letter-spacing:.15em;color:var(--accent-light);
+    margin-bottom:8px;display:block;
+  }
+  .cycle-name{
+    font-family:'Shippori Antique B1','Shippori Mincho',serif;
+    font-size:16px;color:var(--ink);margin-bottom:8px;
+    letter-spacing:.06em;
+  }
+  .cycle-sub{font-size:11px;color:var(--ink-muted);line-height:1.7;margin-bottom:8px}
+  .cycle-arrow{
+    font-size:11px;color:var(--accent-light);
+    letter-spacing:.04em;
+  }
+
+  /* TWELVE-CELL MATRIX */
+  .matrix-12{
+    margin:44px 0;border:1px solid var(--rule);overflow:hidden;
+  }
+  .matrix-12-header{
+    background:var(--bg-warm);padding:12px 20px;
+    font-size:11px;letter-spacing:.14em;color:var(--ink-muted);
+    border-bottom:1px solid var(--rule);
+  }
+  .matrix-12-grid{
+    display:grid;
+    grid-template-columns:80px repeat(3,1fr);
+    gap:0;
+  }
+  .m12-cell{
+    padding:14px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  }
+  .m12-cell:last-child,.m12-cell:nth-child(4n){border-right:none}
+  .m12-cell.row-header{
+    background:var(--bg-warm);font-size:11px;font-weight:600;
+    color:var(--ink-muted);letter-spacing:.08em;
+    display:flex;align-items:center;justify-content:center;
+    text-align:center;line-height:1.5;
+  }
+  .m12-cell.col-header{
+    background:var(--bg-warm);font-size:11px;font-weight:600;
+    color:var(--ink-soft);letter-spacing:.08em;
+    text-align:center;border-bottom:1px solid var(--rule);
+  }
+  .m12-cell.col-header.accent{color:var(--accent)}
+  .m12-cell-title{font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px;letter-spacing:.04em}
+  .m12-cell-body{font-size:.82em;color:var(--ink-muted);line-height:1.7}
+  .m12-cell.last-row{border-bottom:none}
+
+  /* BUILDING METAPHOR */
+  .building{
+    margin:44px 0;display:grid;grid-template-rows:auto auto auto;gap:0;
+    border:1px solid var(--rule);overflow:hidden;
+  }
+  .building-layer{
+    padding:20px 24px;border-bottom:1px solid var(--rule);
+    display:flex;align-items:flex-start;gap:20px;
+  }
+  .building-layer:last-child{border-bottom:none}
+  .building-layer.roof{background:var(--highlight)}
+  .building-layer.foundation{background:var(--bg-warm)}
+  .building-icon{font-size:28px;flex-shrink:0;margin-top:2px;opacity:.7}
+  .building-label{font-size:10px;letter-spacing:.14em;color:var(--accent-light);margin-bottom:6px}
+  .building-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:8px;letter-spacing:.04em}
+  .building-body{font-size:.9em;color:var(--ink-soft);line-height:1.9}
+
+  /* COMPARE TABLE */
+  .compare-table{width:100%;border-collapse:collapse;margin:44px 0;font-size:.9em}
+  .compare-table th{background:var(--bg-warm);border:1px solid var(--rule);padding:11px 14px;text-align:center;font-weight:600;color:var(--ink-soft);letter-spacing:.06em;font-size:.93em}
+  .compare-table th.accent{background:var(--highlight);color:var(--accent)}
+  .compare-table td{border:1px solid var(--rule);padding:11px 14px;line-height:1.8;color:var(--ink-soft);vertical-align:top}
+  .compare-table td.accent{background:var(--highlight);color:var(--ink)}
+  .compare-table tr:hover td{background:var(--highlight)}
+
+  .footnote-area{margin-top:80px;padding-top:32px;border-top:1px solid var(--rule)}
+  .footnote-title{font-size:11px;letter-spacing:.15em;color:var(--ink-muted);margin-bottom:20px}
+  .footnote-item{font-size:.84em;color:var(--ink-muted);line-height:1.8;margin-bottom:10px;padding-left:24px;text-indent:-24px}
+
+  .chapter-nav{display:flex;justify-content:space-between;align-items:stretch;margin-top:96px;padding-top:32px;border-top:1px solid var(--rule);gap:16px}
+  .nav-btn{display:flex;flex-direction:column;gap:4px;text-decoration:none;color:inherit;padding:16px;border:1px solid var(--rule);border-radius:4px;min-width:160px;background:var(--paper);transition:all .2s;flex:1}
+  .nav-btn:hover{background:var(--highlight);border-color:var(--accent-light)}
+  .nav-btn.disabled{opacity:.25;pointer-events:none}
+  .nav-label{font-size:10px;letter-spacing:.15em;color:var(--ink-muted)}
+  .nav-title{font-size:13px;color:var(--ink-soft);line-height:1.5}
+  .nav-btn.next{text-align:right}
+
+  .word-count-info{text-align:center;font-size:11px;color:var(--ink-muted);margin-top:32px;letter-spacing:.08em}
+
+  #toc{position:fixed;left:24px;top:80px;width:180px;display:none;flex-direction:column;gap:6px}
+  @media(min-width:1200px){#toc{display:flex}}
+  .toc-item{font-size:11px;color:var(--ink-muted);line-height:1.6;padding:4px 8px;border-left:2px solid transparent;cursor:pointer;transition:all .2s;text-decoration:none;display:block}
+  .toc-item:hover{color:var(--ink);border-left-color:var(--rule)}
+  .toc-item.active{color:var(--accent-light);border-left-color:var(--accent-light)}
+  .toc-header{font-size:10px;letter-spacing:.15em;color:var(--ink-muted);margin-bottom:8px;padding-left:10px;opacity:.6}
+
+  ruby rt{font-size:.5em}
+  ::selection{background:var(--accent);color:#fff}
+  :focus-visible{outline:2px solid var(--accent-light);outline-offset:2px;border-radius:2px}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  #main>*{animation:fadeUp .55s ease both}
+  .book-meta{animation-delay:.05s}
+  .chapter-header{animation-delay:.12s}
+  .prose{animation-delay:.22s}
+
+  @media(max-width:600px){
+    #main{padding:80px 18px 80px}
+    .scripture,.concept-box{padding:20px 18px}
+    .chapter-nav{flex-direction:column}
+    .nav-btn.next{text-align:left}
+    .cycle-diagram{grid-template-columns:1fr 1fr}
+    .cycle-cell:nth-child(2){border-right:none}
+    .cycle-cell:nth-child(1),.cycle-cell:nth-child(2){border-bottom:1px solid var(--rule)}
+    .matrix-12-grid{grid-template-columns:60px repeat(3,1fr)}
+    .constitution-article{grid-template-columns:60px 1fr}
+    .building-layer{flex-direction:column;gap:10px}
+  }
+  @media print{#toolbar,#toc,#progress-bar{display:none}#main{padding-top:32px}.chapter-nav{display:none}}
+</style>
+</head>
+<body>
+
+<div id="toolbar" role="toolbar" aria-label="読書設定">
+  <span class="tool-label">文字</span>
+  <button class="tool-btn" id="font-down" aria-label="文字を小さく">A−</button>
+  <span id="font-size-display">17</span>
+  <button class="tool-btn" id="font-up" aria-label="文字を大きく">A＋</button>
+  <div class="tool-sep"></div>
+  <span class="tool-label">行間</span>
+  <button class="tool-btn" id="lh-down">≡</button>
+  <button class="tool-btn" id="lh-up">≡ ≡</button>
+  <div class="tool-sep"></div>
+  <button class="tool-btn" id="dark-toggle" aria-label="ダーク/ライト切替">☾</button>
+  <div class="tool-spacer"></div>
+  <span class="tool-label" id="read-time-label"></span>
+  <div class="tool-sep"></div>
+  <button class="tool-btn" onclick="window.print()" aria-label="印刷">⎙</button>
+</div>
+
+<div id="progress-bar" role="progressbar" aria-label="読書進捗"></div>
+
+<nav id="toc" aria-label="節目次">
+  <div class="toc-header">目次</div>
+  <a href="#s1" class="toc-item" data-section="s1">序　制度の問い直し</a>
+  <a href="#s2" class="toc-item" data-section="s2">一　建物・牧師・名簿</a>
+  <a href="#s3" class="toc-item" data-section="s3">二　建築的メタファー</a>
+  <a href="#s4" class="toc-item" data-section="s4">三　シャバットの中心</a>
+  <a href="#s5" class="toc-item" data-section="s5">四　十二のセル構造</a>
+  <a href="#s6" class="toc-item" data-section="s6">五　共同体の憲法草案</a>
+  <a href="#s7" class="toc-item" data-section="s7">六　他の制度との共存</a>
+  <a href="#s8" class="toc-item" data-section="s8">結び　形は内容に従う</a>
+</nav>
+
+<main id="main">
+
+  <div class="book-meta" aria-label="書誌情報">
+    <span class="book-meta-chapter">第六章</span>
+    <span class="book-meta-sep">｜</span>
+    <span class="book-meta-title">生成事象神学に基づく脱記号化教会論</span>
+  </div>
+
+  <header class="chapter-header">
+    <span class="chapter-number">CHAPTER 06</span>
+    <h1 class="chapter-title">脱記号化教会の制度設計</h1>
+    <p class="chapter-subtitle">
+      礼拝堂なき共同体の形——建築・安息・十二セルの神学
+    </p>
+  </header>
+
+  <blockquote class="scripture" aria-label="聖書箇所">
+    <p class="scripture-text">
+      二人または三人がわたしの名によって集まるところには、<br>
+      わたしもその中にいる。
+    </p>
+    <footer class="scripture-ref">マタイによる福音書 18:20（新共同訳）</footer>
+  </blockquote>
+
+  <div class="prose">
+
+    <p class="lead" id="s1">
+      「二人または三人」——イエスはそう言った。礼拝堂とは言わなかった。牧師の資格とは言わなかった。法人登記とは言わなかった。週報とは言わなかった。これほど単純な言葉が、これほど複雑な制度を呼び起こしたのは、なぜか。
+    </p>
+
+    <p>
+      制度は、出来事を守るために生まれる。礼拝堂は、集まりを守るために建てられた。牧師制度は、教えを守るために整えられた。名簿は、共同体を守るために作られた。これらはすべて、正当な動機を持つ。問題は、守るべき出来事が弱体化した後も、制度だけが残り続けるときに起きる。
+    </p>
+
+    <p>
+      本章の課題は、制度を否定することではない。脱記号化教会の「制度設計」を、正面から提案することである。礼拝堂がなくても、牧師がいなくても、名簿がなくても——神の共同体として機能しうる最小の制度的骨格を、神学的に記述する。
+    </p>
+
+    <h2 class="section-heading" id="s2" data-num="一">建物・牧師・名簿——三つの制度的柱の批判的検討</h2>
+
+    <p>
+      伝統的なプロテスタント教会の制度は、大きく三つの柱によって支えられている。礼拝堂（空間の固定）、牧師（権威の集中）、名簿（境界の明確化）である。これらはそれぞれ、神学的な意義を持つと同時に、脱記号化の観点から批判的に問い直される必要がある。
+    </p>
+
+    <p>
+      <strong>礼拝堂について。</strong>空間を聖別することには、神学的な根拠がある。神はしばしば、特定の場所に結びついて啓示される——ベテルの石、シナイの山、エルサレムの神殿。しかし聖書の流れを追うとき、神はその「場所への縛り」を繰り返し超えていくことが見えてくる。神殿崩壊後のユダヤ教は会堂（シナゴーグ）へ移行した。イエスは「この山でもエルサレムでもない場所で」礼拝することを予告した（ヨハネ4:21）。礼拝堂は便利な道具だが、神の出来事の必須条件ではない。
+    </p>
+
+    <p>
+      <strong>牧師について。</strong>新約聖書における指導者像は、多様かつ流動的である。使徒・預言者・教師・監督・執事——これらの役割は重複し、固定した階層を形成していない。「牧師（ポイメーン）」という語はエフェソ4:11に一度だけ登場し、他の職能と並列的に列挙される。一人の牧師に権威が集中する現代の教会制度は、聖書的というより中世カトリックの司教制度の影響を色濃く受けている。
+    </p>
+
+    <p>
+      <strong>名簿について。</strong>洗礼を受け、会員登録をした者だけが「教会員」であるという境界管理は、教会の自己同一性を維持するために機能する。しかしそれは同時に、神の出来事への参与を「登録された者」に限定するという、神学的に疑わしい帰結をもたらす。コリントの手紙に登場する共同体は、信仰の成熟度も倫理的水準も不均一な人々の混在である。境界の曖昧さは、初代教会にとって問題ではなく、現実だった。
+    </p>
+
+    <div class="compare-table" role="table" aria-label="制度的柱の批判的検討">
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr>
+            <th style="background:var(--bg-warm);border:1px solid var(--rule);padding:11px 14px;font-size:.93em;color:var(--ink-soft)">制度</th>
+            <th style="background:var(--bg-warm);border:1px solid var(--rule);padding:11px 14px;font-size:.93em;color:var(--ink-soft)">神学的意義</th>
+            <th style="background:var(--highlight);border:1px solid var(--rule);padding:11px 14px;font-size:.93em;color:var(--accent)">脱記号化的問い</th>
+            <th style="background:var(--highlight);border:1px solid var(--rule);padding:11px 14px;font-size:.93em;color:var(--accent)">代替設計の方向</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="border:1px solid var(--rule);padding:11px 14px;color:var(--ink-soft)">礼拝堂</td>
+            <td style="border:1px solid var(--rule);padding:11px 14px;color:var(--ink-soft)">聖なる場所の象徴・集いの拠点</td>
+            <td style="border:1px solid var(--rule);padding:11px 14px;background:var(--highlight);color:var(--ink)">神の出来事は場所を選ばない</td>
+            <td style="border:1px solid var(--rule);padding:11px 14px;background:var(--highlight);color:var(--ink)">流動的な「間（あわい）」の設計</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid var(--rule);padding:11px 14px;color:var(--ink-soft)">牧師</td>
+            <td style="border:1px solid var(--rule);padding:11px 14px;color:var(--ink-soft)">教えの継承・共同体の守り</td>
+            <td style="border:1px solid var(--rule);padding:11px 14px;background:var(--highlight);color:var(--ink)">権威の集中が出来事を管理化する</td>
+            <td style="border:1px solid var(--rule);padding:11px 14px;background:var(--highlight);color:var(--ink)">複数の証言者による分散的権威</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid var(--rule);padding:11px 14px;color:var(--ink-soft)">名簿</td>
+            <td style="border:1px solid var(--rule);padding:11px 14px;color:var(--ink-soft)">共同体の自己同一性の保証</td>
+            <td style="border:1px solid var(--rule);padding:11px 14px;background:var(--highlight);color:var(--ink)">境界が出来事への参与を阻む</td>
+            <td style="border:1px solid var(--rule);padding:11px 14px;background:var(--highlight);color:var(--ink)">三リング構造による流動的境界</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-heading" id="s3" data-num="二">建築的メタファー——基礎・柱・屋根の神学</h2>
+
+    <p>
+      脱記号化教会の制度設計を語るために、建築のメタファーを用いたい。これはNSPPTフレームワークが用いる比喩的構造であり、共同体の三層的な設計原理を示すものである。
+    </p>
+
+    <div class="building" aria-label="建築的メタファー——共同体の三層構造">
+      <div class="building-layer roof">
+        <div class="building-icon">🏛</div>
+        <div>
+          <div class="building-label">ROOF　屋根層</div>
+          <div class="building-title">証言と派遣——Tharsos の展開面</div>
+          <div class="building-body">外の世界へ向かって開かれた面。ここから雨が流れ落ちるように、恩寵は世界へ流れ出る。宣教・社会参与・BroadListening・デジタル民主主義はすべて「屋根」の機能に属する。屋根は嵐を止めるためではなく、雨水を導くために設計される。</div>
+        </div>
+      </div>
+      <div class="building-layer" style="background:var(--paper)">
+        <div class="building-icon">🏗</div>
+        <div>
+          <div class="building-label">PILLARS　柱層</div>
+          <div class="building-title">四つの柱——Energeia の支持構造</div>
+          <div class="building-body">共同体を立たせる四つの柱：<strong>証言（Witness）</strong>・<strong>食卓（Table）</strong>・<strong>祈り（Prayer）</strong>・<strong>応答（Response）</strong>。この四つが揃っていれば、建物はどこでも立てられる。礼拝堂の代わりに台所の食卓が、牧師の代わりに証言する隣人が、名簿の代わりにPK-Ringが柱として機能する。</div>
+        </div>
+      </div>
+      <div class="building-layer foundation">
+        <div class="building-icon">⛰</div>
+        <div>
+          <div class="building-label">FOUNDATION　基礎層</div>
+          <div class="building-title">シャバット——Dynamis の根源</div>
+          <div class="building-body">すべての構造を支える土台は「安息」である。シャバット（安息日）は、活動の停止ではなく、神の出来事の源泉への還帰である。共同体がどれほど拡張し、活動し、発信しても、この基礎への定期的な帰還なしに、建物は地盤沈下する。</div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      重要なのは、この建築モデルが「固定した建物」を想定していないことである。これは「テント」の構造に近い。基礎は岩盤（神の出来事への志向）に打ち込まれているが、柱と屋根は解体・移動・再組立が可能である。出エジプトのイスラエルが持ち運んだ幕屋（タベルナクル）のように、共同体は場所に縛られず、しかし構造的な統一性を保って移動できる。
+    </p>
+
+    <h2 class="section-heading" id="s4" data-num="三">シャバットの中心——安息を制度の軸に置く</h2>
+
+    <p>
+      脱記号化教会の制度設計において、最も非直感的な選択は「安息（シャバット）を中心に置く」ことかもしれない。効率化・数値化・可視化・最適化を志向するテクノロジー時代において、「何もしないこと」を制度の核とする提案は奇妙に見える。
+    </p>
+
+    <p>
+      しかし生成事象神学の文脈では、シャバットは不活動ではない。それは「Dynamis の充填」である。神が七日目に「休まれた」のは、疲れたからではない（イザヤ40:28）。七日目は、六日間の生成を「完成された出来事」として受け取り、その出来事の意味を深く内在化するための時間である。
+    </p>
+
+    <div class="cycle-diagram" role="table" aria-label="シャバット週次サイクル">
+      <div class="cycle-cell">
+        <span class="cycle-num">PHASE 1</span>
+        <div class="cycle-name">派遣</div>
+        <div class="cycle-sub">世界へ向かう。縁（ふち）の形成。出来事への参与。</div>
+        <div class="cycle-arrow">Dynamis ↓</div>
+      </div>
+      <div class="cycle-cell">
+        <span class="cycle-num">PHASE 2</span>
+        <div class="cycle-name">出来事</div>
+        <div class="cycle-sub">神との・隣人との出会い。Energeia の生起。証言の素材が生まれる。</div>
+        <div class="cycle-arrow">Energeia ↓</div>
+      </div>
+      <div class="cycle-cell">
+        <span class="cycle-num">PHASE 3</span>
+        <div class="cycle-name">証言</div>
+        <div class="cycle-sub">出来事を語り直す。共同体への還元。PK-Ringの一周。</div>
+        <div class="cycle-arrow">Tharsos ↓</div>
+      </div>
+      <div class="cycle-cell center-return">
+        <span class="cycle-num">PHASE 4</span>
+        <div class="cycle-name">シャバット</div>
+        <div class="cycle-sub">中心への帰還。沈黙・祈り・余白。次の Dynamis の充填。</div>
+        <div class="cycle-arrow">→ Phase 1 へ</div>
+      </div>
+    </div>
+
+    <p>
+      週次サイクルとして設計されたこの四段階は、特定の曜日に縛られる必要はない。日曜礼拝という制度はこのサイクルを「日曜日の集まり」として制度化したが、より根本的なのはサイクルの構造そのものである。派遣→出来事→証言→安息→派遣——この螺旋が生きている共同体は、礼拝堂がなくても「礼拝する共同体」として機能する。
+    </p>
+
+    <h2 class="section-heading" id="s5" data-num="四">十二のセル構造——NSPPTの共同体格子</h2>
+
+    <p>
+      脱記号化教会の内部構造を、NSPPTは「十二のセル」として設計する。これはDETの三段階（Dynamis・Energeia・Tharsos）と、共同体の四つの柱（証言・食卓・祈り・応答）の積によって生成される3×4の格子である。
+    </p>
+
+    <div class="matrix-12" aria-label="十二のセル構造">
+      <div class="matrix-12-header">NSPPTの十二セル構造　——　DET三段階 × 四つの柱</div>
+      <div class="matrix-12-grid">
+        <div class="m12-cell col-header" style="border:1px solid var(--rule)"></div>
+        <div class="m12-cell col-header accent" style="border:1px solid var(--rule)">Dynamis<br><small>潜在・種</small></div>
+        <div class="m12-cell col-header accent" style="border:1px solid var(--rule)">Energeia<br><small>現実・出来事</small></div>
+        <div class="m12-cell col-header accent" style="border:1px solid var(--rule)">Tharsos<br><small>変容・証言</small></div>
+
+        <div class="m12-cell row-header" style="border:1px solid var(--rule)">証言<br>Witness</div>
+        <div class="m12-cell" style="border:1px solid var(--rule)">
+          <div class="m12-cell-title">聴取の準備</div>
+          <div class="m12-cell-body">出来事の前に耳を澄ます。BroadListeningの姿勢。</div>
+        </div>
+        <div class="m12-cell" style="border:1px solid var(--rule)">
+          <div class="m12-cell-title">語りの出来事</div>
+          <div class="m12-cell-body">神との出会いが言葉になる瞬間。MINIST Narrative。</div>
+        </div>
+        <div class="m12-cell" style="border:1px solid var(--rule)">
+          <div class="m12-cell-title">証言の流通</div>
+          <div class="m12-cell-body">語られた出来事が共同体を流れ、次の縁（ふち）へ。</div>
+        </div>
+
+        <div class="m12-cell row-header" style="border:1px solid var(--rule)">食卓<br>Table</div>
+        <div class="m12-cell" style="border:1px solid var(--rule)">
+          <div class="m12-cell-title">招待の縁（ふち）</div>
+          <div class="m12-cell-body">食卓への誘い。三リングの外から中へ。</div>
+        </div>
+        <div class="m12-cell" style="border:1px solid var(--rule)">
+          <div class="m12-cell-title">共食の出来事</div>
+          <div class="m12-cell-body">同じパンを割る。ペリコレーシスの食卓的実現。</div>
+        </div>
+        <div class="m12-cell" style="border:1px solid var(--rule)">
+          <div class="m12-cell-title">もてなしの記憶</div>
+          <div class="m12-cell-body">食事の記憶が変容の証拠として残る。Inheritance。</div>
+        </div>
+
+        <div class="m12-cell row-header" style="border:1px solid var(--rule)">祈り<br>Prayer</div>
+        <div class="m12-cell" style="border:1px solid var(--rule)">
+          <div class="m12-cell-title">課題の発見</div>
+          <div class="m12-cell-body">データと現実から祈りの課題を発見する。余白の準備。</div>
+        </div>
+        <div class="m12-cell" style="border:1px solid var(--rule)">
+          <div class="m12-cell-title">祈りの出来事</div>
+          <div class="m12-cell-body">神への呼びかけが応答を呼ぶ。Selah の実践。</div>
+        </div>
+        <div class="m12-cell" style="border:1px solid var(--rule)">
+          <div class="m12-cell-title">応答された祈り</div>
+          <div class="m12-cell-body">祈りが現実を変えた痕跡の記録。GratiaUnit として蓄積。</div>
+        </div>
+
+        <div class="m12-cell row-header last-row" style="border:1px solid var(--rule)">応答<br>Response</div>
+        <div class="m12-cell last-row" style="border:1px solid var(--rule)">
+          <div class="m12-cell-title">行動への準備</div>
+          <div class="m12-cell-body">出来事を受けて動くための準備。DAO的な役割分担。</div>
+        </div>
+        <div class="m12-cell last-row" style="border:1px solid var(--rule)">
+          <div class="m12-cell-title">行動の出来事</div>
+          <div class="m12-cell-body">隣人への具体的な働きかけ。Transformation の実践。</div>
+        </div>
+        <div class="m12-cell last-row" style="border:1px solid var(--rule)">
+          <div class="m12-cell-title">変革の波及</div>
+          <div class="m12-cell-body">応答が新たな縁（ふち）を生む。PK-Ringの次の周回へ。</div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      十二のセルは、共同体の「活動の地図」として機能する。どのセルが豊かで、どのセルが枯渇しているかを定期的に点検することが、共同体の自己診断となる。証言はあるが食卓がない。祈りはあるが応答がない——このような偏りが可視化されることで、共同体はバランスを取り戻す方向を知ることができる。
+    </p>
+
+    <h2 class="section-heading" id="s6" data-num="五">共同体の憲法草案——最小限の制度的骨格</h2>
+
+    <p>
+      以上の神学的考察を踏まえ、脱記号化教会の「最小憲法」を草案として提示する。これは法的文書ではなく、共同体が自らの存在様式について合意するための神学的宣言である。
+    </p>
+
+    <div class="constitution" aria-label="脱記号化教会共同体の憲法草案">
+      <div class="constitution-header">
+        <span>脱記号化共同体　基本条項（草案）</span>
+        <span style="font-size:11px">NSPPT Framework v1.0</span>
+      </div>
+      <div class="constitution-article">
+        <div class="article-num">第一条</div>
+        <div>
+          <div class="article-title">出来事への優先的開放</div>
+          <div class="article-body">この共同体は、神の出来事（Energeia）が生起する場として自らを定義する。制度・建物・肩書きは、出来事への参与を助けるかぎりにおいて価値を持ち、それを阻むかぎりにおいて問い直される。</div>
+        </div>
+      </div>
+      <div class="constitution-article">
+        <div class="article-num">第二条</div>
+        <div>
+          <div class="article-title">三リングの開放性</div>
+          <div class="article-body">すべての人は、洗礼・会員登録・信仰告白の有無にかかわらず、縁（ふち）のリングへの参与を歓迎される。境界は排除のためではなく、成熟の段階を示すために存在する。</div>
+        </div>
+      </div>
+      <div class="constitution-article">
+        <div class="article-num">第三条</div>
+        <div>
+          <div class="article-title">分散的権威</div>
+          <div class="article-body">権威は特定の人物に集中しない。複数の証言者が、それぞれの出来事の経験に基づいて語る。Gratia Consensusによる共鳴的合意が、共同体の意思決定の基本様式となる。</div>
+        </div>
+      </div>
+      <div class="constitution-article">
+        <div class="article-num">第四条</div>
+        <div>
+          <div class="article-title">シャバットの遵守</div>
+          <div class="article-body">共同体は定期的に「中心への帰還」を実践する。活動・発信・拡大の衝動に対して、意図的な沈黙と安息の時を確保する。この停止こそが、次の出来事の源泉となる。</div>
+        </div>
+      </div>
+      <div class="constitution-article">
+        <div class="article-num">第五条</div>
+        <div>
+          <div class="article-title">辺縁への優先的注意</div>
+          <div class="article-body">声を持たない者、データに現れない者、制度に接触できない者への優先的注意を払う。共同体の健全さは、最も弱い構成員の状態によって測られる。</div>
+        </div>
+      </div>
+      <div class="constitution-article">
+        <div class="article-num">第六条</div>
+        <div>
+          <div class="article-title">記録と透明性</div>
+          <div class="article-body">神の出来事は記録され、共同体に開かれる。MINISTスキーマによる霊的記録と、BroadListeningによる社会的記録は、同一の神学的回路として統合される。</div>
+        </div>
+      </div>
+      <div class="constitution-article">
+        <div class="article-num">第七条</div>
+        <div>
+          <div class="article-title">PK-Ringへの参与</div>
+          <div class="article-body">ペリコレーシス・カイロス環——相互内在と決定的な時の循環——への参与が、この共同体の礼拝の基本形式である。食卓・祈り・証言・応答の四柱が、場所を問わずPK-Ringを形成する。</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-heading" id="s7" data-num="六">他の制度との共存——脱記号化は分離主義ではない</h2>
+
+    <p>
+      ここで誤解を防ぐために、重要な点を明確にしなければならない。脱記号化教会論は、既存の制度的教会との決別を主張するものではない。
+    </p>
+
+    <p>
+      歴史の中で生き延びてきた制度的教会には、脱記号化教会が持ちえない資産がある。二千年の神学的遺産、礼拝の美的洗練、殉教者たちの証言の積み重ね、世界規模のネットワーク——これらは、出来事の記憶の巨大なアーカイブである。脱記号化の視点から見ても、これらは無価値ではない。問題は、アーカイブが生きた出来事の代替になるときにのみ発生する。
+    </p>
+
+    <div class="pull-quote" aria-label="引用">
+      <div class="pull-quote-text">
+        脱記号化教会は、制度的教会の敵ではない。<br>
+        制度が記号化した後も、出来事を覚えている者たちだ。
+      </div>
+    </div>
+
+    <p>
+      理想的な関係は、制度的教会と脱記号化共同体が相互に補完し合うことである。制度的教会は、神学的記憶・訓練・美的礼拝の資源を提供できる。脱記号化共同体は、制度の外に取り残された人々への縁（ふち）形成、出来事の新鮮な生起の場を提供できる。
+    </p>
+
+    <p>
+      新篠津の文脈では、これは具体的にこのような形をとる。近隣都市の礼拝堂のある教会が、神学的・牧会的なサポートを提供する。新篠津の脱記号化共同体は、制度的教会が届かない農村の人々への縁（ふち）を耕す。両者がPK-Ringで繋がれるとき、ペリコレーシス的な相互内在が、地域規模で起きる。
+    </p>
+
+    <h2 class="section-heading" id="s8" data-num="結び">形は内容に従う——制度は出来事の器</h2>
+
+    <p>
+      建築家ルイス・サリバンの名言「形は機能に従う（Form follows function）」を、神学的に書き換えるとすれば：「形は出来事に従う」となる。
+    </p>
+
+    <p>
+      共同体の形——礼拝堂の有無、牧師の有無、集会の頻度、意思決定の方法——これらすべては、神の出来事が生起しやすいように設計されるべきである。形が出来事を生むのではない。出来事が形を要求する。
+    </p>
+
+    <p>
+      新篠津において、その出来事は今も起きている。田んぼの端で隣人が語りかけてくる言葉に。光ファイバーを通じて届いた一行の声に。深夜にスマートフォンの画面を通じて祈りを送ってくれる見知らぬ人に。これらすべてにおいて、神は出来事として現れている。
+    </p>
+
+    <p>
+      「二人または三人がわたしの名によって集まるところには、わたしもその中にいる。」礼拝堂もない。牧師もいない。名簿もない。しかしここには二人がいる。あるいは三人が。そしてイエスは、「その中にいる」と言った。
+    </p>
+
+    <p>
+      次章では、この設計思想を日本のプロテスタント宣教全体への提言として接続する。JPCDP（日本プロテスタント教会デジタルプラットフォーム）が集積したデータは、日本全国の「礼拝堂なき可能性」の地図でもある。データの神学的読解から、宣教論的な未来像を描く。
+    </p>
+
+  </div>
+
+  <aside class="footnote-area" aria-label="注">
+    <div class="footnote-title">注　および参考文献（第六章）</div>
+    <p class="footnote-item">*1　「牧師（ポイメーン）」の新約聖書的用例については、エフェソ4:11の文脈に加え、Joachim Jeremias, "Jerusalem in the Time of Jesus"（1969）における初期キリスト教の職能構造の分析を参照。</p>
+    <p class="footnote-item">*2　「幕屋（タベルナクル）」の移動する神の住まいとしての神学については、Brevard Childs, "The Book of Exodus"（1974）および Frank Frick, "The Formation of the State in Ancient Israel"（1985）を参照。</p>
+    <p class="footnote-item">*3　シャバットの神学的意義については、Abraham Joshua Heschel, "The Sabbath"（1951）が最も深い洞察を提供する古典的文献。「時間の建築（architecture of time）」としてのシャバットという概念は、本章の「建築的メタファー」と深く共鳴する。</p>
+    <p class="footnote-item">*4　「形は機能に従う（Form follows function）」はルイス・サリバン"The Tall Office Building Artistically Considered"（1896）に由来する建築理念。神学への応用は著者による。</p>
+    <p class="footnote-item">*5　第六条の「MINIST記録系とBroadListening記録系の統合」については、第五章を参照。技術的実装は現在進行中であり、本書刊行時点での最新状況は付録Bを参照のこと。</p>
+  </aside>
+
+  <div class="word-count-info" aria-label="本文情報">
+    本文：約 <span id="char-count">0</span> 字　｜　推定読了時間：<span id="read-minutes">0</span> 分
+  </div>
+
+  <nav class="chapter-nav" aria-label="章ナビゲーション">
+    <a href="nsppt_chapter5_reader.html" class="nav-btn">
+      <span class="nav-label">◀ 前の章</span>
+      <span class="nav-title">第五章　デジタル民主主義と広聴宣教</span>
+    </a>
+    <a href="nsppt_chapter7_reader.html" class="nav-btn next">
+      <span class="nav-label">次の章 ▶</span>
+      <span class="nav-title">第七章　JPCDPと日本宣教の未来地図</span>
+    </a>
+  </nav>
+
+</main>
+
+<script>
+  let fontSize=17,lh=2.1;
+  const body=document.body,fontDisplay=document.getElementById('font-size-display');
+  document.getElementById('font-up').addEventListener('click',()=>{if(fontSize<24){fontSize++;body.style.fontSize=fontSize+'px';fontDisplay.textContent=fontSize}});
+  document.getElementById('font-down').addEventListener('click',()=>{if(fontSize>13){fontSize--;body.style.fontSize=fontSize+'px';fontDisplay.textContent=fontSize}});
+  document.getElementById('lh-up').addEventListener('click',()=>{if(lh<2.8){lh=Math.round((lh+.2)*10)/10;body.style.lineHeight=lh}});
+  document.getElementById('lh-down').addEventListener('click',()=>{if(lh>1.6){lh=Math.round((lh-.2)*10)/10;body.style.lineHeight=lh}});
+  const darkBtn=document.getElementById('dark-toggle');
+  darkBtn.addEventListener('click',()=>{body.classList.toggle('dark');darkBtn.textContent=body.classList.contains('dark')?'☀':'☾';darkBtn.classList.toggle('active',body.classList.contains('dark'))});
+  const progressBar=document.getElementById('progress-bar');
+  window.addEventListener('scroll',()=>{const pct=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100;progressBar.style.width=Math.min(pct,100)+'%'},{passive:true});
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));const t=document.querySelector(`.toc-item[data-section="${e.target.id}"]`);if(t)t.classList.add('active')}})},{rootMargin:'-20% 0px -60% 0px'});
+  document.querySelectorAll('[id^="s"]').forEach(s=>obs.observe(s));
+  const prose=document.querySelector('.prose');
+  if(prose){const count=(prose.innerText||'').replace(/\s/g,'').length;document.getElementById('char-count').textContent=count.toLocaleString('ja-JP');const mins=Math.ceil(count/400);document.getElementById('read-minutes').textContent=mins;document.getElementById('read-time-label').textContent=`残り約${mins}分`}
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'})}})});
+</script>
+</body>
+</html>

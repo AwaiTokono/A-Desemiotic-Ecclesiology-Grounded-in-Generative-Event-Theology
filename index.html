@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生成事象神学に基づく脱記号化教会論｜NSPPT</title>
+<meta name="description" content="Non-Symbolic Post-Protestantism Theology — 合同会社#AWAI・あわい（間）著">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500&family=Shippori+Antique+B1&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f1ea;
+    --paper: #f9f6ef;
+    --ink: #1c1810;
+    --ink-soft: #362e20;
+    --ink-muted: #74685a;
+    --accent: #5a3a18;
+    --accent-light: #9a6428;
+    --gold: #b89020;
+    --rule: #c8bfae;
+    --highlight: #e4dcd0;
+  }
+  body.dark {
+    --bg: #100e0a;
+    --paper: #201c16;
+    --ink: #e8e0d0;
+    --ink-soft: #c4baa8;
+    --ink-muted: #78685a;
+    --accent: #d09050;
+    --accent-light: #e8b870;
+    --gold: #d4a830;
+    --rule: #3a3020;
+    --highlight: #2a2418;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    transition: background .4s, color .4s;
+  }
+
+  /* ── DARK TOGGLE ── */
+  #dark-btn {
+    position: fixed;
+    top: 20px; right: 20px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    color: var(--ink-muted);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+  }
+  #dark-btn:hover { background: var(--highlight); color: var(--ink); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  /* 背景の装飾的グリッド線 */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--rule) 1px, transparent 1px),
+      linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: .18;
+    pointer-events: none;
+  }
+
+  /* 中央の光源 */
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(184,144,32,.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .25em;
+    color: var(--accent-light);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp .8s ease .1s both;
+  }
+
+  .hero-title-jp {
+    font-family: 'Shippori Antique B1', 'Shippori Mincho', serif;
+    font-size: clamp(22px, 5vw, 38px);
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: .1em;
+    color: var(--ink);
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp .8s ease .25s both;
+  }
+
+  .hero-title-en {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(9px, 1.5vw, 12px);
+    letter-spacing: .18em;
+    color: var(--ink-muted);
+    margin-bottom: 48px;
+    line-height: 2;
+    opacity: 0;
+    animation: fadeUp .8s ease .35s both;
+  }
+
+  .hero-divider {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, var(--rule), transparent);
+    margin: 0 auto 40px;
+    opacity: 0;
+    animation: fadeUp .8s ease .45s both;
+  }
+
+  .hero-meta {
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 2;
+    opacity: 0;
+    animation: fadeUp .8s ease .55s both;
+  }
+
+  .hero-meta strong {
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .2em;
+    color: var(--ink-muted);
+    opacity: 0;
+    animation: fadeUp .8s ease .8s both;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero-scroll::after {
+    content: '';
+    width: 1px;
+    height: 32px;
+    background: var(--rule);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* ── CHAPTER LIST ── */
+  .chapters {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 80px 24px 120px;
+  }
+
+  .chapters-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .25em;
+    color: var(--ink-muted);
+    margin-bottom: 48px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .chapter-item {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 0;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+    color: inherit;
+    transition: background .15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chapter-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 0;
+    background: var(--accent);
+    transition: width .2s ease;
+  }
+
+  .chapter-item:hover { background: var(--highlight); }
+  .chapter-item:hover::before { width: 2px; }
+
+  .chapter-item.final {
+    border: 1px solid var(--rule);
+    border-top: none;
+    background: var(--paper);
+  }
+  .chapter-item.final:hover { background: var(--highlight); }
+
+  .ch-num {
+    padding: 28px 0 28px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .15em;
+    color: var(--accent-light);
+    display: flex;
+    align-items: flex-start;
+    padding-top: 30px;
+    flex-shrink: 0;
+  }
+
+  .ch-body {
+    padding: 24px 20px 24px 8px;
+    border-left: 1px solid var(--rule);
+  }
+
+  .ch-title-jp {
+    font-family: 'Shippori Antique B1', 'Shippori Mincho', serif;
+    font-size: clamp(16px, 2.5vw, 20px);
+    font-weight: 400;
+    letter-spacing: .06em;
+    color: var(--ink);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .ch-subtitle {
+    font-size: 12px;
+    color: var(--ink-muted);
+    letter-spacing: .04em;
+    line-height: 1.7;
+  }
+
+  .ch-scripture {
+    font-size: 11px;
+    color: var(--accent-light);
+    letter-spacing: .06em;
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  .ch-arrow {
+    padding: 28px 20px 28px 16px;
+    display: flex;
+    align-items: center;
+    color: var(--rule);
+    font-size: 18px;
+    transition: color .2s, transform .2s;
+    flex-shrink: 0;
+  }
+  .chapter-item:hover .ch-arrow {
+    color: var(--accent-light);
+    transform: translateX(4px);
+  }
+
+  /* ── FRAMEWORK BADGE ── */
+  .framework-section {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  .fw-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .25em;
+    color: var(--ink-muted);
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .fw-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .fw-badge {
+    border: 1px solid var(--rule);
+    padding: 8px 14px;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 130px;
+  }
+
+  .fw-badge-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent-light);
+    letter-spacing: .08em;
+  }
+
+  .fw-badge-desc {
+    font-size: 11px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    border-top: 1px solid var(--rule);
+    padding: 40px 24px;
+    text-align: center;
+    background: var(--paper);
+  }
+
+  .footer-title {
+    font-family: 'Shippori Antique B1', serif;
+    font-size: 14px;
+    color: var(--ink-soft);
+    letter-spacing: .1em;
+    margin-bottom: 8px;
+  }
+
+  .footer-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-muted);
+    letter-spacing: .15em;
+    line-height: 2;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: .3; }
+    50%       { opacity: 1; }
+  }
+
+  .chapter-item {
+    opacity: 0;
+    animation: fadeUp .5s ease both;
+  }
+  .chapter-item:nth-child(1)  { animation-delay: .05s; }
+  .chapter-item:nth-child(2)  { animation-delay: .10s; }
+  .chapter-item:nth-child(3)  { animation-delay: .15s; }
+  .chapter-item:nth-child(4)  { animation-delay: .20s; }
+  .chapter-item:nth-child(5)  { animation-delay: .25s; }
+  .chapter-item:nth-child(6)  { animation-delay: .30s; }
+  .chapter-item:nth-child(7)  { animation-delay: .35s; }
+  .chapter-item:nth-child(8)  { animation-delay: .40s; }
+  .chapter-item:nth-child(9)  { animation-delay: .45s; }
+
+  ::selection { background: var(--accent); color: #fff; }
+  :focus-visible { outline: 2px solid var(--accent-light); outline-offset: 2px; }
+
+  @media (max-width: 600px) {
+    .chapter-item { grid-template-columns: 44px 1fr 36px; }
+    .ch-num { padding: 22px 0 22px 14px; font-size: 10px; }
+    .ch-body { padding: 18px 12px 18px 10px; }
+    .ch-arrow { padding: 18px 12px; }
+    .fw-badge { min-width: calc(50% - 4px); }
+  }
+</style>
+</head>
+<body>
+
+<button id="dark-btn" aria-label="ダーク/ライト切替">☾</button>
+
+<!-- HERO -->
+<section class="hero" aria-label="書籍タイトル">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">NSPPT FRAMEWORK — 2025</div>
+    <h1 class="hero-title-jp">
+      生成事象神学に基づく<br>脱記号化教会論
+    </h1>
+    <p class="hero-title-en">
+      NON-SYMBOLIC POST-PROTESTANTISM THEOLOGY<br>
+      AN ECCLESIOLOGY BASED ON GENERATIVE EVENT THEOLOGY
+    </p>
+    <div class="hero-divider"></div>
+    <p class="hero-meta">
+      著　<strong>あわい（間）</strong><br>
+      合同会社 #AWAI　北海道空知郡新篠津村
+    </p>
+  </div>
+  <div class="hero-scroll" aria-hidden="true">SCROLL</div>
+</section>
+
+<!-- CHAPTERS -->
+<nav class="chapters" aria-label="章一覧">
+  <div class="chapters-label">
+    <span>目次　CONTENTS</span>
+    <span>全8章</span>
+  </div>
+
+  <a href="nsppt_chapter1_reader.html" class="chapter-item">
+    <div class="ch-num">CH<br>01</div>
+    <div class="ch-body">
+      <div class="ch-title-jp">空の鳥を見なさい</div>
+      <div class="ch-subtitle">象徴を持たない存在と、教会の臨界点について</div>
+      <div class="ch-scripture">マタイ 6:26</div>
+    </div>
+    <div class="ch-arrow">›</div>
+  </a>
+
+  <a href="nsppt_chapter2_reader.html" class="chapter-item">
+    <div class="ch-num">CH<br>02</div>
+    <div class="ch-body">
+      <div class="ch-title-jp">神は出来事である</div>
+      <div class="ch-subtitle">生成事象神学の核心——存在論から出来事論へ</div>
+      <div class="ch-scripture">出エジプト 3:14</div>
+    </div>
+    <div class="ch-arrow">›</div>
+  </a>
+
+  <a href="nsppt_chapter3_reader.html" class="chapter-item">
+    <div class="ch-num">CH<br>03</div>
+    <div class="ch-body">
+      <div class="ch-title-jp">DAO教会論</div>
+      <div class="ch-subtitle">分散型共同体の神学的根拠——中心なき教会の設計思想</div>
+      <div class="ch-scripture">使徒言行録 4:32–33</div>
+    </div>
+    <div class="ch-arrow">›</div>
+  </a>
+
+  <a href="nsppt_chapter4_reader.html" class="chapter-item">
+    <div class="ch-num">CH<br>04</div>
+    <div class="ch-body">
+      <div class="ch-title-jp">辺縁からの宣教論</div>
+      <div class="ch-subtitle">新篠津という神学的地点——過疎・光・星が照らすもの</div>
+      <div class="ch-scripture">ヨハネ 1:46</div>
+    </div>
+    <div class="ch-arrow">›</div>
+  </a>
+
+  <a href="nsppt_chapter5_reader.html" class="chapter-item">
+    <div class="ch-num">CH<br>05</div>
+    <div class="ch-body">
+      <div class="ch-title-jp">デジタル民主主義と広聴宣教</div>
+      <div class="ch-subtitle">#AWAIの実践神学——テクノロジーをPK-Ringの媒体として設計する</div>
+      <div class="ch-scripture">ヤコブ 1:5</div>
+    </div>
+    <div class="ch-arrow">›</div>
+  </a>
+
+  <a href="nsppt_chapter6_reader.html" class="chapter-item">
+    <div class="ch-num">CH<br>06</div>
+    <div class="ch-body">
+      <div class="ch-title-jp">脱記号化教会の制度設計</div>
+      <div class="ch-subtitle">礼拝堂なき共同体の形——建築・安息・十二セルの神学</div>
+      <div class="ch-scripture">マタイ 18:20</div>
+    </div>
+    <div class="ch-arrow">›</div>
+  </a>
+
+  <a href="nsppt_chapter7_reader.html" class="chapter-item">
+    <div class="ch-num">CH<br>07</div>
+    <div class="ch-body">
+      <div class="ch-title-jp">JPCDPと日本宣教の未来地図</div>
+      <div class="ch-subtitle">データの神学的読解——日本全国の「礼拝堂なき可能性」を可視化する</div>
+      <div class="ch-scripture">イザヤ 43:19</div>
+    </div>
+    <div class="ch-arrow">›</div>
+  </a>
+
+  <a href="nsppt_chapter8_final.html" class="chapter-item final">
+    <div class="ch-num" style="color:var(--gold)">終<br>章</div>
+    <div class="ch-body">
+      <div class="ch-title-jp" style="color:var(--accent)">空の鳥への応答</div>
+      <div class="ch-subtitle">脱記号化教会論の総括と展望——問いを携えて、荒れ野へ戻る</div>
+      <div class="ch-scripture">マタイ 6:26（回帰）</div>
+    </div>
+    <div class="ch-arrow" style="color:var(--gold)">›</div>
+  </a>
+</nav>
+
+<!-- FRAMEWORK BADGES -->
+<section class="framework-section" aria-label="NSPPTフレームワーク">
+  <div class="fw-label">NSPPT FRAMEWORK — 主要概念</div>
+  <div class="fw-badges">
+    <div class="fw-badge">
+      <div class="fw-badge-name">DET</div>
+      <div class="fw-badge-desc">Dynamis・Energeia・Tharsos</div>
+    </div>
+    <div class="fw-badge">
+      <div class="fw-badge-name">Hebel³</div>
+      <div class="fw-badge-desc">縁（ふち）・間（あわい）・余白</div>
+    </div>
+    <div class="fw-badge">
+      <div class="fw-badge-name">PK-Ring</div>
+      <div class="fw-badge-desc">ペリコレーシス・カイロス環</div>
+    </div>
+    <div class="fw-badge">
+      <div class="fw-badge-name">MINIST</div>
+      <div class="fw-badge-desc">霊的出来事の六次元記録</div>
+    </div>
+    <div class="fw-badge">
+      <div class="fw-badge-name">JPCDP</div>
+      <div class="fw-badge-desc">日本宣教デジタルプラットフォーム</div>
+    </div>
+    <div class="fw-badge">
+      <div class="fw-badge-name">DAO教会論</div>
+      <div class="fw-badge-desc">分散型自律共同体設計</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-title">合同会社 #AWAI</div>
+  <div class="footer-sub">
+    北海道空知郡新篠津村<br>
+    Non-Symbolic Post-Protestantism Theology © 2025
+  </div>
+</footer>
+
+<script>
+  const btn = document.getElementById('dark-btn');
+  btn.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    btn.textContent = document.body.classList.contains('dark') ? '☀' : '☾';
+  });
+</script>
+</body>
+</html>

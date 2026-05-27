@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAO教会論｜第3章｜脱記号化教会論</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500&family=Shippori+Antique+B1&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f1ea;
+    --bg-warm: #ece7db;
+    --paper: #f9f6ef;
+    --ink: #1c1810;
+    --ink-soft: #362e20;
+    --ink-muted: #74685a;
+    --accent: #2a5298;
+    --accent-light: #4a78c8;
+    --accent-warm: #c44a2a;
+    --rule: #c8bfae;
+    --highlight: #e4dcd0;
+    --font-base: 17px;
+    --line-height: 2.1;
+    --chapter-width: 700px;
+    --side-pad: clamp(24px, 8vw, 120px);
+  }
+  body.dark {
+    --bg: #100e0a;
+    --bg-warm: #1a1812;
+    --paper: #201c16;
+    --ink: #e8e0d0;
+    --ink-soft: #c4baa8;
+    --ink-muted: #78685a;
+    --accent: #5a88d8;
+    --accent-light: #7aa8f0;
+    --accent-warm: #e06840;
+    --rule: #3a3020;
+    --highlight: #2a2418;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:'Shippori Mincho','Noto Serif JP',serif;
+    font-size:var(--font-base);line-height:var(--line-height);
+    -webkit-font-smoothing:antialiased;
+    transition:background .3s,color .3s;
+  }
+
+  /* TOOLBAR */
+  #toolbar{
+    position:fixed;top:0;left:0;right:0;height:52px;
+    background:var(--paper);border-bottom:1px solid var(--rule);
+    display:flex;align-items:center;padding:0 20px;gap:10px;z-index:100;
+    transition:background .3s,border-color .3s;
+  }
+  .tool-label{font-size:11px;color:var(--ink-muted);letter-spacing:.08em;font-family:'JetBrains Mono',monospace;user-select:none;white-space:nowrap}
+  .tool-btn{
+    background:var(--bg-warm);border:1px solid var(--rule);color:var(--ink-soft);
+    padding:5px 12px;font-family:inherit;font-size:13px;cursor:pointer;
+    border-radius:3px;transition:all .15s;min-height:32px;min-width:32px;white-space:nowrap;
+  }
+  .tool-btn:hover{background:var(--highlight);color:var(--ink)}
+  .tool-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .tool-sep{width:1px;height:24px;background:var(--rule);margin:0 2px}
+  .tool-spacer{flex:1}
+  #font-size-display{font-size:12px;color:var(--ink-muted);min-width:26px;text-align:center}
+
+  /* PROGRESS */
+  #progress-bar{
+    position:fixed;top:52px;left:0;height:2px;
+    background:var(--accent-light);width:0%;transition:width .1s linear;z-index:99;
+  }
+
+  /* MAIN */
+  #main{
+    max-width:var(--chapter-width);margin:0 auto;
+    padding:96px var(--side-pad) 120px;
+  }
+
+  /* BOOK META */
+  .book-meta{
+    display:flex;align-items:center;gap:12px;
+    margin-bottom:52px;padding-bottom:24px;border-bottom:1px solid var(--rule);
+  }
+  .book-meta-chapter{font-size:11px;letter-spacing:.15em;font-family:'JetBrains Mono',monospace;color:var(--ink-muted)}
+  .book-meta-sep{color:var(--rule)}
+  .book-meta-title{font-size:12px;color:var(--ink-muted);font-weight:400}
+
+  /* CHAPTER HEADER */
+  .chapter-header{margin-bottom:60px}
+  .chapter-number{font-size:11px;letter-spacing:.2em;font-family:'JetBrains Mono',monospace;color:var(--accent-light);margin-bottom:20px;display:block}
+  .chapter-title{
+    font-family:'Shippori Antique B1','Shippori Mincho',serif;
+    font-size:clamp(26px,5vw,38px);font-weight:400;line-height:1.45;
+    color:var(--ink);letter-spacing:.06em;margin-bottom:24px;
+  }
+  .chapter-subtitle{
+    font-size:15px;color:var(--ink-muted);font-weight:400;
+    letter-spacing:.04em;border-left:2px solid var(--accent-light);
+    padding-left:16px;line-height:1.7;
+  }
+
+  /* SCRIPTURE */
+  .scripture{
+    background:var(--bg-warm);border-left:3px solid var(--accent);
+    padding:26px 30px;margin:48px 0;border-radius:0 4px 4px 0;position:relative;
+  }
+  .scripture::before{content:'✦';position:absolute;top:18px;right:18px;color:var(--accent);opacity:.2;font-size:16px}
+  .scripture-text{font-size:1.03em;line-height:2.0;color:var(--ink-soft);font-style:italic;margin-bottom:10px}
+  .scripture-ref{font-size:.84em;color:var(--ink-muted);letter-spacing:.06em}
+
+  /* PROSE */
+  .prose p{
+    margin-bottom:1.6em;text-align:justify;text-justify:inter-ideograph;
+    hanging-punctuation:first last;word-break:break-all;overflow-wrap:break-word;
+  }
+  .prose p.lead{font-size:1.07em;color:var(--ink-soft);line-height:2.2;margin-bottom:2em}
+
+  /* SECTION HEADING */
+  .section-heading{
+    font-family:'Shippori Antique B1','Shippori Mincho',serif;
+    font-size:1.2em;font-weight:400;color:var(--ink);
+    letter-spacing:.08em;margin:64px 0 28px;
+    padding-bottom:12px;border-bottom:1px solid var(--rule);
+    display:flex;align-items:baseline;gap:12px;
+  }
+  .section-heading::before{content:attr(data-num);font-size:.7em;color:var(--accent-light);letter-spacing:.1em;font-family:'Shippori Mincho',serif;min-width:28px}
+
+  /* CONCEPT BOX */
+  .concept-box{
+    border:1px solid var(--rule);padding:26px 30px;margin:44px 0;
+    background:var(--paper);position:relative;
+  }
+  .concept-box-label{
+    position:absolute;top:-10px;left:18px;background:var(--paper);
+    padding:0 8px;font-size:11px;letter-spacing:.12em;color:var(--accent-light);
+  }
+  .concept-box-title{font-size:1.08em;font-weight:600;margin-bottom:12px;color:var(--ink);letter-spacing:.06em}
+  .concept-box p{font-size:.92em;color:var(--ink-soft);line-height:2.0;margin-bottom:.8em}
+  .concept-box p:last-child{margin-bottom:0}
+
+  /* PULL QUOTE */
+  .pull-quote{margin:52px 0;text-align:center}
+  .pull-quote-text{
+    font-family:'Shippori Antique B1','Shippori Mincho',serif;
+    font-size:clamp(16px,3vw,21px);color:var(--ink-soft);
+    line-height:1.95;letter-spacing:.08em;padding:0 24px;display:inline-block;
+  }
+  .pull-quote-text::before,.pull-quote-text::after{content:'';display:block;width:40px;height:1px;background:var(--accent-light);margin:14px auto}
+
+  /* DAO STRUCTURE DIAGRAM */
+  .dao-diagram{
+    margin:48px 0;border:1px solid var(--rule);
+    background:var(--paper);overflow:hidden;
+  }
+  .dao-diagram-title{
+    font-size:11px;letter-spacing:.14em;color:var(--ink-muted);
+    padding:14px 20px;border-bottom:1px solid var(--rule);
+    background:var(--bg-warm);
+  }
+  .dao-diagram-body{padding:28px 24px}
+  .dao-layer{
+    display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:10px;
+  }
+  .dao-layer-2{grid-template-columns:1fr 1fr}
+  .dao-layer-3{grid-template-columns:1fr 1fr 1fr}
+  .dao-node{
+    border:1px solid var(--rule);padding:14px 16px;
+    background:var(--bg);border-radius:2px;
+  }
+  .dao-node.center{background:var(--highlight);border-color:var(--accent);text-align:center}
+  .dao-node.ring{background:var(--paper)}
+  .dao-node-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px;letter-spacing:.04em}
+  .dao-node-desc{font-size:11px;color:var(--ink-muted);line-height:1.7}
+  .dao-connector{
+    display:flex;justify-content:center;align-items:center;
+    color:var(--rule);font-size:18px;padding:4px 0;
+    letter-spacing:32px;
+  }
+  .dao-connector.live{color:var(--accent-light)}
+
+  /* THREE-RING GRID */
+  .ring-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+    background:var(--rule);margin:44px 0;overflow:hidden;border:1px solid var(--rule);
+  }
+  .ring-cell{
+    background:var(--paper);padding:20px 18px;
+  }
+  .ring-cell.header{
+    background:var(--bg-warm);font-size:11px;letter-spacing:.12em;
+    color:var(--ink-muted);display:flex;align-items:center;justify-content:center;
+    padding:14px;font-family:'Shippori Mincho',serif;
+  }
+  .ring-cell.header.accent{background:var(--highlight);color:var(--accent)}
+  .ring-cell-title{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:6px;letter-spacing:.04em}
+  .ring-cell p{font-size:.88em;color:var(--ink-soft);line-height:1.8;margin:0}
+
+  /* COMPARE TABLE */
+  .compare-table{width:100%;border-collapse:collapse;margin:44px 0;font-size:.9em}
+  .compare-table th{
+    background:var(--bg-warm);border:1px solid var(--rule);
+    padding:11px 14px;text-align:center;font-weight:600;
+    color:var(--ink-soft);letter-spacing:.06em;font-size:.93em;
+  }
+  .compare-table th.accent{background:var(--highlight);color:var(--accent)}
+  .compare-table td{border:1px solid var(--rule);padding:11px 14px;line-height:1.8;color:var(--ink-soft);vertical-align:top}
+  .compare-table td.accent{background:var(--highlight);color:var(--ink)}
+  .compare-table tr:hover td{background:var(--highlight)}
+
+  /* FOOTNOTE */
+  .footnote-area{margin-top:80px;padding-top:32px;border-top:1px solid var(--rule)}
+  .footnote-title{font-size:11px;letter-spacing:.15em;color:var(--ink-muted);margin-bottom:20px}
+  .footnote-item{font-size:.84em;color:var(--ink-muted);line-height:1.8;margin-bottom:10px;padding-left:24px;text-indent:-24px}
+
+  /* CHAPTER NAV */
+  .chapter-nav{
+    display:flex;justify-content:space-between;align-items:stretch;
+    margin-top:96px;padding-top:32px;border-top:1px solid var(--rule);gap:16px;
+  }
+  .nav-btn{
+    display:flex;flex-direction:column;gap:4px;
+    text-decoration:none;color:inherit;padding:16px;border:1px solid var(--rule);
+    border-radius:4px;min-width:160px;background:var(--paper);
+    transition:all .2s;flex:1;cursor:pointer;
+  }
+  .nav-btn:hover{background:var(--highlight);border-color:var(--accent-light)}
+  .nav-btn.disabled{opacity:.25;pointer-events:none}
+  .nav-label{font-size:10px;letter-spacing:.15em;color:var(--ink-muted)}
+  .nav-title{font-size:13px;color:var(--ink-soft);line-height:1.5}
+  .nav-btn.next{text-align:right}
+
+  .word-count-info{text-align:center;font-size:11px;color:var(--ink-muted);margin-top:32px;letter-spacing:.08em}
+
+  /* TOC */
+  #toc{position:fixed;left:24px;top:80px;width:180px;display:none;flex-direction:column;gap:6px}
+  @media(min-width:1200px){#toc{display:flex}}
+  .toc-item{font-size:11px;color:var(--ink-muted);line-height:1.6;padding:4px 8px;border-left:2px solid transparent;cursor:pointer;transition:all .2s;text-decoration:none;display:block}
+  .toc-item:hover{color:var(--ink);border-left-color:var(--rule)}
+  .toc-item.active{color:var(--accent-light);border-left-color:var(--accent-light)}
+  .toc-header{font-size:10px;letter-spacing:.15em;color:var(--ink-muted);margin-bottom:8px;padding-left:10px;opacity:.6}
+
+  ruby rt{font-size:.5em}
+  ::selection{background:var(--accent);color:#fff}
+  :focus-visible{outline:2px solid var(--accent-light);outline-offset:2px;border-radius:2px}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  #main>*{animation:fadeUp .55s ease both}
+  .book-meta{animation-delay:.05s}
+  .chapter-header{animation-delay:.12s}
+  .prose{animation-delay:.22s}
+
+  @media(max-width:600px){
+    #main{padding:80px 18px 80px}
+    .scripture,.concept-box{padding:20px 18px}
+    .chapter-nav{flex-direction:column}
+    .nav-btn.next{text-align:left}
+    .ring-grid{grid-template-columns:1fr}
+    .dao-layer-2,.dao-layer-3{grid-template-columns:1fr}
+  }
+  @media print{#toolbar,#toc,#progress-bar{display:none}#main{padding-top:32px}.chapter-nav{display:none}}
+</style>
+</head>
+<body>
+
+<div id="toolbar" role="toolbar" aria-label="読書設定">
+  <span class="tool-label">文字</span>
+  <button class="tool-btn" id="font-down" aria-label="文字を小さく">A−</button>
+  <span id="font-size-display">17</span>
+  <button class="tool-btn" id="font-up" aria-label="文字を大きく">A＋</button>
+  <div class="tool-sep"></div>
+  <span class="tool-label">行間</span>
+  <button class="tool-btn" id="lh-down">≡</button>
+  <button class="tool-btn" id="lh-up">≡ ≡</button>
+  <div class="tool-sep"></div>
+  <button class="tool-btn" id="dark-toggle" aria-label="ダーク/ライト切替">☾</button>
+  <div class="tool-spacer"></div>
+  <span class="tool-label" id="read-time-label"></span>
+  <div class="tool-sep"></div>
+  <button class="tool-btn" onclick="window.print()" aria-label="印刷">⎙</button>
+</div>
+
+<div id="progress-bar" role="progressbar" aria-label="読書進捗"></div>
+
+<nav id="toc" aria-label="節目次">
+  <div class="toc-header">目次</div>
+  <a href="#s1" class="toc-item" data-section="s1">序　組織の問い</a>
+  <a href="#s2" class="toc-item" data-section="s2">一　DAOとは何か</a>
+  <a href="#s3" class="toc-item" data-section="s3">二　使徒行伝の共同体</a>
+  <a href="#s4" class="toc-item" data-section="s4">三　三つのリング構造</a>
+  <a href="#s5" class="toc-item" data-section="s5">四　PK-Ringの神学</a>
+  <a href="#s6" class="toc-item" data-section="s6">五　トークンと恩寵</a>
+  <a href="#s7" class="toc-item" data-section="s7">六　日本的適用</a>
+  <a href="#s8" class="toc-item" data-section="s8">結び　分散の神学</a>
+</nav>
+
+<main id="main">
+
+  <div class="book-meta" aria-label="書誌情報">
+    <span class="book-meta-chapter">第三章</span>
+    <span class="book-meta-sep">｜</span>
+    <span class="book-meta-title">生成事象神学に基づく脱記号化教会論</span>
+  </div>
+
+  <header class="chapter-header">
+    <span class="chapter-number">CHAPTER 03</span>
+    <h1 class="chapter-title">DAO教会論</h1>
+    <p class="chapter-subtitle">
+      分散型共同体の神学的根拠——中心なき教会の設計思想
+    </p>
+  </header>
+
+  <blockquote class="scripture" aria-label="聖書箇所">
+    <p class="scripture-text">
+      信じた人々の群れは心も思いも一つにして、だれ一人自分の所有物を自分のものだと言わず、<br>
+      すべてを共有していた。使徒たちは力強く主イエスの復活を証言し、<br>
+      皆、大きな恵みを受けていた。
+    </p>
+    <footer class="scripture-ref">使徒言行録 4:32–33（新共同訳）</footer>
+  </blockquote>
+
+  <div class="prose">
+
+    <p class="lead" id="s1">
+      二千年の歴史を持つ教会が、二十一世紀に生まれたブロックチェーン技術の組織論から学ぶべきことがあるとすれば、それは何か。奇妙な問いに聞こえるかもしれない。しかし考えてみれば、教会と<ruby>DAO<rt>ダオ</rt></ruby>の間には、驚くほど深い構造的共鳴がある。
+    </p>
+
+    <p>
+      前章では、神を「静止した存在」ではなく「生起し続ける出来事」として理解する生成事象神学の核心を確認した。この神学が要請する共同体の形は、中央集権的な制度ではなく、出来事が分散して起きることを可能にする「場の設計」であるはずだ。
+    </p>
+
+    <p>
+      その設計思想の現代的な類型として、本章では<ruby>DAO<rt>Distributed Autonomous Organization</rt></ruby>——分散型自律組織——の概念を参照する。これはWeb3技術を礼賛することではない。むしろ逆である。現代のDAOが試みていることの神学的先例が、初代教会の共同体にすでに存在していたことを、示したいのである。
+    </p>
+
+    <h2 class="section-heading" id="s2" data-num="一">DAOとは何か——中心を持たない組織の論理</h2>
+
+    <p>
+      DAOとは、特定の権力中枢を持たず、プログラムされたルール（スマートコントラクト）と参加者のコンセンサスによって自律的に運営される組織形態である。2016年以降、ブロックチェーン技術の発展とともに実践的な実験が積み重ねられてきた。
+    </p>
+
+    <p>
+      DAOの本質的な特徴は次の三点にある。第一に、権力の分散（Decentralization）。意思決定は中央の指導者ではなく、参加者全体に分散している。第二に、透明性（Transparency）。すべての取引と決定がオープンに記録され、誰でも検証できる。第三に、自律性（Autonomy）。参加者が自発的にコミットし、ルールに基づいて自己組織化する。
+    </p>
+
+    <p>
+      ここで一歩立ち止まって問いたい。これは教会にとって、本当に「新しい」発想なのか。
+    </p>
+
+    <div class="pull-quote" aria-label="引用">
+      <div class="pull-quote-text">
+        初代教会は、二千年前にすでに<br>
+        分散型自律共同体を実践していた。
+      </div>
+    </div>
+
+    <h2 class="section-heading" id="s3" data-num="二">使徒行伝の共同体——聖書のDAO</h2>
+
+    <p>
+      使徒言行録が描く初代エルサレム教会の姿は、現代のDAO設計者が夢見るモデルに驚くほど近い。
+    </p>
+
+    <p>
+      使徒行伝2章の「五千人の回心」から4章32節の「すべてを共有していた」まで、その共同体の姿には次の特徴がある。所有の共有——個人資産は自発的にコミュニティへ開放された。分散した礼拝——「神殿の境内に集まり、家でパンを割り、喜びと誠実な心をもって食事を共にした」（2:46）。多中心的なリーダーシップ——使徒たちは特権的な支配者ではなく、証言する者として機能した。境界の流動性——ユダヤ人とギリシャ語話者、自由人と奴隷が同じ食卓を囲んだ。
+    </p>
+
+    <p>
+      この共同体が崩壊したのは、外部からの迫害によってではなく、むしろ組織が「制度化」した時点からである。使徒たちが去った後、司教制度が整備され、教会法が制定され、コンスタンティヌス帝の勅令によって「国教」となった瞬間に、教会は中央集権的な権力組織へと変容した。分散型自律共同体としての初代教会は、そこで終わった。
+    </p>
+
+    <div class="concept-box" aria-label="概念説明">
+      <span class="concept-box-label">KEY CONCEPT</span>
+      <div class="concept-box-title">制度化の三段階（Institutionalization Curve）</div>
+      <p>
+        <strong>第一段階：出来事の共有</strong> — 神との出会いの体験が、自発的な共同体を形成する。境界は曖昧で、参加は有機的。
+      </p>
+      <p>
+        <strong>第二段階：記号の固定</strong> — 体験を伝達するために、儀礼・教義・役職が整備される。機能として必要だが、出来事を硬直させるリスクを持つ。
+      </p>
+      <p>
+        <strong>第三段階：象徴体制の自律化</strong> — 記号が出来事に取って代わる。制度の維持が目的化し、神との生きた出会いが周縁化される。
+      </p>
+      <p>
+        DAO教会論は、第一段階の力学を現代的文脈で回復しようとする試みである。
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="s4" data-num="三">三つのリング構造——分散型教会の設計</h2>
+
+    <p>
+      DAO教会論が提案する共同体の設計は、同心円的な「三つのリング構造」をとる。これは階層ではなく、それぞれが自律しながら相互に浸透し合う関係性の圏域として理解されるべきものだ。
+    </p>
+
+    <div class="ring-grid" role="table" aria-label="三つのリング構造">
+      <div class="ring-cell header accent">外リング<br>縁（ふち）</div>
+      <div class="ring-cell header accent">中リング<br>間（あわい）</div>
+      <div class="ring-cell header accent">内リング<br>余白（よはく）</div>
+
+      <div class="ring-cell">
+        <div class="ring-cell-title">開かれた接触圏</div>
+        <p>教会の外にいる人々との接点。福祉・教育・地域活動・デジタル空間を通じた縁の生成。「求道者」「関心層」「偶然の隣人」が属する。</p>
+      </div>
+      <div class="ring-cell">
+        <div class="ring-cell-title">生きた共同体圏</div>
+        <p>定期的に集まり、共に食事し、互いの生を分かち合う人々の圏域。信仰告白の有無にかかわらず、「出来事を共に生きる者」として構成される。</p>
+      </div>
+      <div class="ring-cell">
+        <div class="ring-cell-title">深い祈りの圏</div>
+        <p>礼拝・聖書・祈り・霊的訓練を中心とする核。DET三段階の深まりを担う者たちの圏域。ここから縁と間へ向けて「遣わされる」運動が始まる。</p>
+      </div>
+
+      <div class="ring-cell">
+        <div class="ring-cell-title">対応する Hebel³</div>
+        <p>縁（ふち）・Dynamis<br>可能性の接続点</p>
+      </div>
+      <div class="ring-cell">
+        <div class="ring-cell-title">対応する Hebel³</div>
+        <p>間（Energeia）<br>出来事の生起点</p>
+      </div>
+      <div class="ring-cell">
+        <div class="ring-cell-title">対応する Hebel³</div>
+        <p>余白（Tharsos準備）<br>変容と統合の場</p>
+      </div>
+    </div>
+
+    <p>
+      従来の教会モデルとの決定的な違いは、「中心への収束」ではなく「辺縁への展開」を本来の運動方向とする点である。従来のモデルでは、外から内へ——伝道して、洗礼を受けさせて、会員にする——という求心的な運動が基本だった。DAO教会論では、内から外へ——余白から間へ、間から縁へ、縁からさらに広い世界へ——という遠心的な運動が基本となる。
+    </p>
+
+    <h2 class="section-heading" id="s5" data-num="四">PK-Ringの神学——恩寵の共有プロトコル</h2>
+
+    <p>
+      DAO組織において、参加者の貢献と合意を媒介するのが「トークン（Token）」と「コンセンサス・プロトコル」である。これを神学的に翻訳したとき、何が対応するか。
+    </p>
+
+    <p>
+      本書では、この機能を担う概念を<ruby>PK-Ring<rt>ピーケーリング</rt></ruby>と呼ぶ。Pは<ruby>ペリコレーシス<rt>Perichoresis</rt></ruby>、Kは<ruby>カイロス<rt>Kairos</rt></ruby>を指す。すなわち「ペリコレーシス・カイロス環」——三位一体の相互内在という神の本質的な動きが、具体的な時（カイロス）において共同体の中で反響し、循環する構造を示す概念である。
+    </p>
+
+    <p>
+      <ruby>ペリコレーシス<rt>Perichoresis</rt></ruby>とは、三位一体神学において父・子・霊が互いの内に住まい、互いを通して働くという「相互内在」の概念である（ヨハネ17:21「父よ、あなたがわたしの内におられ、わたしがあなたの内にいるように」）。この神の内的な踊り（peri-chorein）は、共同体論においては「誰かが誰かの内に生き、誰かが誰かを通して輝く」関係性のモデルとなる。<ruby>カイロス<rt>Kairos</rt></ruby>は、均質に流れる時間（クロノス）ではなく、神の働きが凝縮した「決定的な時・今この瞬間」を指すギリシャ語の概念である。PK-Ringとは、ペリコレーシス的な相互内在の動きが、カイロスとして到来する出来事を通じて共同体の中で循環し続けるプロセスの神学的記述である。
+    </p>
+
+    <div class="dao-diagram" aria-label="PK-Ring構造図">
+      <div class="dao-diagram-title">PK-RING　恩寵循環プロトコルの構造</div>
+      <div class="dao-diagram-body">
+        <div class="dao-layer">
+          <div class="dao-node center">
+            <div class="dao-node-title">GratiaUnit（恩寵単位）</div>
+            <div class="dao-node-desc">神との出来事を「記録可能な単位」として扱う概念。蓄積・移転・減衰を持つ動的な恩寵の表象。</div>
+          </div>
+        </div>
+        <div class="dao-connector live">↓ ↓ ↓</div>
+        <div class="dao-layer dao-layer-3">
+          <div class="dao-node ring">
+            <div class="dao-node-title">証言（Witness）</div>
+            <div class="dao-node-desc">神との出来事を語ること。記録し、共同体に開示する行為。</div>
+          </div>
+          <div class="dao-node ring">
+            <div class="dao-node-title">応答（Response）</div>
+            <div class="dao-node-desc">証言を聞いた者が変容し、新たな出来事への準備が整う。</div>
+          </div>
+          <div class="dao-node ring">
+            <div class="dao-node-title">分散（Distribution）</div>
+            <div class="dao-node-desc">恩寵は独占されず、外リングへと流れ出る設計をとる。</div>
+          </div>
+        </div>
+        <div class="dao-connector live">↓</div>
+        <div class="dao-layer">
+          <div class="dao-node">
+            <div class="dao-node-title">Gratia Consensus（恩寵合意）</div>
+            <div class="dao-node-desc">共同体が「これは神の働きだ」と集合的に認識する過程。投票ではなく、共鳴と証言による合意形成。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      重要なのは、GratiaUnitが「減衰」するという設定である。体験された恩寵は、共有されなければ劣化する——これは聖書の「マナ」のメタファーと共鳴する。翌日まで取っておいたマナは腐った（出エジプト16:20）。恩寵は貯蔵されるためではなく、循環するために与えられる。
+    </p>
+
+    <h2 class="section-heading" id="s6" data-num="五">トークンと恩寵——経済神学の可能性と危険</h2>
+
+    <p>
+      DAOのトークン経済学を神学に応用することには、深刻な危険が伴う。恩寵は数値化できないし、すべきでもない。神との出来事を「貢献度スコア」に換算することは、恩寵の本質を根本から歪める。
+    </p>
+
+    <p>
+      この危険を十分に認識した上で、それでも「トークン」という概念が神学的に有用な理由がある。それは、貢献を「可視化する」ためではなく、「流動化する」ためである。
+    </p>
+
+    <p>
+      従来の教会経済は、献金→牧師給与→会堂維持費という固定的な流れを持っていた。これは「恩寵の中央集権化」である。GratiaUnitの概念は、恩寵の流れを多方向に開放することを目指す。ある人が受けた恩寵は、隣人への具体的な助けとして流れ出る。その助けは、また別の出来事を生む種となる——この有機的な循環を、コミュニティとして設計可能なものとして扱うことが、DAO教会論の実践的提案である。
+    </p>
+
+    <table class="compare-table" aria-label="従来型教会とDAO教会の比較">
+      <thead>
+        <tr>
+          <th>機能</th>
+          <th>従来型（中央集権）</th>
+          <th class="accent">DAO型（分散自律）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>リーダーシップ</td>
+          <td>牧師・長老への集中</td>
+          <td class="accent">複数の証言者による分散</td>
+        </tr>
+        <tr>
+          <td>意思決定</td>
+          <td>役員会・総会の決議</td>
+          <td class="accent">Gratia Consensus（共鳴型合意）</td>
+        </tr>
+        <tr>
+          <td>資産管理</td>
+          <td>教会法人による集中管理</td>
+          <td class="accent">コミュニティへの分散開放</td>
+        </tr>
+        <tr>
+          <td>参加の境界</td>
+          <td>洗礼・会員登録</td>
+          <td class="accent">三つのリングへの自発的参与</td>
+        </tr>
+        <tr>
+          <td>宣教の方向</td>
+          <td>外から内への求心</td>
+          <td class="accent">内から外への遠心</td>
+        </tr>
+        <tr>
+          <td>失敗の扱い</td>
+          <td>規律と排除</td>
+          <td class="accent">次の出来事への素材として統合</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-heading" id="s7" data-num="六">日本的適用——過疎地からの実験</h2>
+
+    <p>
+      新篠津村での実践は、DAO教会論の「実験場」である。
+    </p>
+
+    <p>
+      人口約二千七百人。高齢化率四十パーセント超。礼拝堂なし。組織的な教会活動なし。しかしここには、豊かな「縁」のネットワークがある。農業共同体の相互扶助の文化。村全域をカバーする光ファイバー網。夜空を見上げる習慣に根ざした「星のある暮らし」のブランド。
+    </p>
+
+    <p>
+      この環境においてDAO教会論を実践するとは、具体的には何を意味するのか。礼拝堂を建設することではない。村人を「教会員」に登録することでもない。むしろ、すでにそこにある縁の網の目の中で、神の出来事が起きやすい「間（あわい）」を意図的に設計することである。
+    </p>
+
+    <p>
+      村の行政支援ツール、市民参加プラットフォーム、デジタル民主主義の実験——これらは、筆者が#AWAI合同会社として取り組む実践であり、同時にDAO教会論の具体的な展開でもある。テクノロジーによる「広い聴取（BroadListening）」は、村人の声を可視化し、隣人の痛みと喜びを共同体に流通させる。これは、まさにPK-Ringの現代的な実装である。
+    </p>
+
+    <div class="concept-box" aria-label="概念説明">
+      <span class="concept-box-label">KEY CONCEPT</span>
+      <div class="concept-box-title">BroadListening as Mission（広聴宣教）</div>
+      <p>
+        「宣教（Mission）」を「伝える行為」としてのみ理解する発想から、「聴く行為」をも宣教の中核に置く転換。人々の声を集め、可視化し、共同体に還元することで、神の出来事が生起しやすい「縁」の土台を耕す。
+      </p>
+      <p>
+        デジタル民主主義ツールは、この「聴く宣教」の技術的インフラとして機能しうる。過疎地において声を失いかけている人々——高齢者、障害者、外国籍住民——の声を可視化することは、隣人愛の最も現代的な実践の一つである。
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="s8" data-num="結び">分散の神学——ペンテコステの意味を問い直す</h2>
+
+    <p>
+      使徒行伝2章のペンテコステ（聖霊降臨）の記事は、驚くべきことに、DAO的な出来事として読み解くことができる。
+    </p>
+
+    <p>
+      聖霊は、十二使徒だけに降ったのではない。「その場にいた全員」に降った。炎の舌は「分かれて」（2:3）それぞれの上に降り注いだ。効果もまた分散した——「ガリラヤ、ユダヤ、カッパドキア、ポントス、アジア……」各地から来た人々が、それぞれ自分の言葉で神の働きを聞いた。
+    </p>
+
+    <p>
+      ペンテコステは、中央からの一斉放送ではなく、分散した多言語の出来事であった。一つのハブから情報が送信されるのではなく、各ノードが同時に受信し、同時に発信した。これはまさに、分散型自律ネットワークの神学的原型である。
+    </p>
+
+    <p>
+      聖霊論（Pneumatology）をDAO的に理解することは、聖霊の働きを矮小化することではない。むしろ、聖霊が「教会の壁の内側」に閉じ込められてきた二千年の歴史からの解放である。聖霊は制度に従わない。聖霊は「吹きたいところへ吹く」（ヨハネ3:8）。ならば教会の使命は、聖霊の吹く場所を管理することではなく、聖霊が吹くどこへでも「縁（ふち）」として存在することだ。
+    </p>
+
+    <p>
+      次章では、この洞察を地政学的に展開する。「新篠津からの宣教論」——過疎地・辺縁・周縁から発せられる福音の声が、中心よりもむしろ鋭く世界の輪郭を照らし出すことを、具体的なデータと神学的考察をもって示したい。
+    </p>
+
+  </div>
+
+  <aside class="footnote-area" aria-label="注">
+    <div class="footnote-title">注　および参考文献（第三章）</div>
+    <p class="footnote-item">*1　DAOの定義と歴史については、ヴィタリック・ブテリン（Ethereum創設者）の論文「DAOs, DACs, DAs and More」（2014）、および暗号通貨コミュニティにおける実装事例（MakerDAO, Compound等）を参照。ただし本書の関心はWeb3技術そのものではなく、その組織論的示唆にある。</p>
+    <p class="footnote-item">*2　初代教会の「経済共有」については、Martin Hengel, "Property and Riches in the Early Church"（1974）を参照。使徒行伝2-5章の経済的共同体の実像と、その神学的意味について詳細な分析がある。</p>
+    <p class="footnote-item">*3　「PK-Ring（ペリコレーシス・カイロス環）」はペリコレーシス（三位一体の相互内在）とカイロス（神の決定的な時）を組み合わせた著者による概念。ペリコレーシスの古典的定義はダマスカスのヨハネ『正統信仰論』（8世紀）を参照。カイロス論については Oscar Cullmann, "Christ and Time"（1946）が基礎文献。「GratiaUnit」とともに、DAOのトークン経済学と神学的恩寵論を架橋するための分析ツールとして提案する。経済的・数値的な換算を目的とするものでは全くない。</p>
+    <p class="footnote-item">*4　「BroadListening（広い聴取）」の概念は、オードリー・タン（前台湾デジタル担当大臣）が推進した市民参加型政策決定プロセスから着想を得ている。参照：Audrey Tang, "Digital Democracy" (2023)。</p>
+    <p class="footnote-item">*5　ペンテコステの「分散型」解釈については、Amos Yong, "Spirit Poured Out on All Flesh: Pentecostalism and the Possibility of Global Theology"（2005）が有益な先行研究である。</p>
+  </aside>
+
+  <div class="word-count-info" aria-label="本文情報">
+    本文：約 <span id="char-count">0</span> 字　｜　推定読了時間：<span id="read-minutes">0</span> 分
+  </div>
+
+  <nav class="chapter-nav" aria-label="章ナビゲーション">
+    <a href="nsppt_chapter2_reader.html" class="nav-btn">
+      <span class="nav-label">◀ 前の章</span>
+      <span class="nav-title">第二章　神は出来事である</span>
+    </a>
+    <a href="nsppt_chapter4_reader.html" class="nav-btn next">
+      <span class="nav-label">次の章 ▶</span>
+      <span class="nav-title">第四章　辺縁からの宣教論——新篠津という神学的地点</span>
+    </a>
+  </nav>
+
+</main>
+
+<script>
+  let fontSize=17,lh=2.1;
+  const body=document.body,fontDisplay=document.getElementById('font-size-display');
+
+  document.getElementById('font-up').addEventListener('click',()=>{if(fontSize<24){fontSize++;body.style.fontSize=fontSize+'px';fontDisplay.textContent=fontSize}});
+  document.getElementById('font-down').addEventListener('click',()=>{if(fontSize>13){fontSize--;body.style.fontSize=fontSize+'px';fontDisplay.textContent=fontSize}});
+  document.getElementById('lh-up').addEventListener('click',()=>{if(lh<2.8){lh=Math.round((lh+.2)*10)/10;body.style.lineHeight=lh}});
+  document.getElementById('lh-down').addEventListener('click',()=>{if(lh>1.6){lh=Math.round((lh-.2)*10)/10;body.style.lineHeight=lh}});
+
+  const darkBtn=document.getElementById('dark-toggle');
+  darkBtn.addEventListener('click',()=>{body.classList.toggle('dark');darkBtn.textContent=body.classList.contains('dark')?'☀':'☾';darkBtn.classList.toggle('active',body.classList.contains('dark'))});
+
+  const progressBar=document.getElementById('progress-bar');
+  window.addEventListener('scroll',()=>{
+    const pct=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100;
+    progressBar.style.width=Math.min(pct,100)+'%';
+  },{passive:true});
+
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));
+        const t=document.querySelector(`.toc-item[data-section="${e.target.id}"]`);
+        if(t)t.classList.add('active');
+      }
+    });
+  },{rootMargin:'-20% 0px -60% 0px'});
+  document.querySelectorAll('[id^="s"]').forEach(s=>obs.observe(s));
+
+  const prose=document.querySelector('.prose');
+  if(prose){
+    const count=(prose.innerText||'').replace(/\s/g,'').length;
+    document.getElementById('char-count').textContent=count.toLocaleString('ja-JP');
+    const mins=Math.ceil(count/400);
+    document.getElementById('read-minutes').textContent=mins;
+    document.getElementById('read-time-label').textContent=`残り約${mins}分`;
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      const t=document.querySelector(a.getAttribute('href'));
+      if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'})}
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>神は出来事である｜第2章｜脱記号化教会論</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500&family=Shippori+Antique+B1&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f1ea;
+    --bg-warm: #ece7db;
+    --paper: #f9f6ef;
+    --ink: #1c1810;
+    --ink-soft: #362e20;
+    --ink-muted: #74685a;
+    --accent: #5c4a2a;
+    --accent-light: #a07d4f;
+    --rule: #c8bfae;
+    --highlight: #e4dcd0;
+    --font-base: 17px;
+    --line-height: 2.1;
+    --chapter-width: 700px;
+    --side-pad: clamp(24px, 8vw, 120px);
+  }
+  body.dark {
+    --bg: #100e0a;
+    --bg-warm: #1a1812;
+    --paper: #201c16;
+    --ink: #e8e0d0;
+    --ink-soft: #c4baa8;
+    --ink-muted: #78685a;
+    --accent: #c8a060;
+    --accent-light: #d4b078;
+    --rule: #3a3020;
+    --highlight: #2a2418;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:'Shippori Mincho','Noto Serif JP',serif;
+    font-size:var(--font-base);line-height:var(--line-height);
+    -webkit-font-smoothing:antialiased;
+    transition:background .3s,color .3s;
+  }
+
+  /* TOOLBAR */
+  #toolbar{
+    position:fixed;top:0;left:0;right:0;height:52px;
+    background:var(--paper);border-bottom:1px solid var(--rule);
+    display:flex;align-items:center;padding:0 20px;gap:10px;z-index:100;
+    transition:background .3s,border-color .3s;
+  }
+  .tool-label{font-size:11px;color:var(--ink-muted);letter-spacing:.08em;font-family:'JetBrains Mono',monospace;user-select:none;white-space:nowrap}
+  .tool-btn{
+    background:var(--bg-warm);border:1px solid var(--rule);color:var(--ink-soft);
+    padding:5px 12px;font-family:inherit;font-size:13px;cursor:pointer;
+    border-radius:3px;transition:all .15s;min-height:32px;min-width:32px;white-space:nowrap;
+  }
+  .tool-btn:hover{background:var(--highlight);color:var(--ink)}
+  .tool-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .tool-sep{width:1px;height:24px;background:var(--rule);margin:0 2px}
+  .tool-spacer{flex:1}
+  #font-size-display{font-size:12px;color:var(--ink-muted);min-width:26px;text-align:center}
+
+  /* PROGRESS */
+  #progress-bar{
+    position:fixed;top:52px;left:0;height:2px;
+    background:var(--accent-light);width:0%;transition:width .1s linear;z-index:99;
+  }
+
+  /* MAIN */
+  #main{
+    max-width:var(--chapter-width);margin:0 auto;
+    padding:96px var(--side-pad) 120px;
+  }
+
+  /* BOOK META */
+  .book-meta{
+    display:flex;align-items:center;gap:12px;
+    margin-bottom:52px;padding-bottom:24px;border-bottom:1px solid var(--rule);
+  }
+  .book-meta-chapter{font-size:11px;letter-spacing:.15em;font-family:'JetBrains Mono',monospace;color:var(--ink-muted)}
+  .book-meta-sep{color:var(--rule)}
+  .book-meta-title{font-size:12px;color:var(--ink-muted);font-weight:400}
+
+  /* CHAPTER HEADER */
+  .chapter-header{margin-bottom:60px}
+  .chapter-number{font-size:11px;letter-spacing:.2em;font-family:'JetBrains Mono',monospace;color:var(--accent-light);margin-bottom:20px;display:block}
+  .chapter-title{
+    font-family:'Shippori Antique B1','Shippori Mincho',serif;
+    font-size:clamp(26px,5vw,38px);font-weight:400;line-height:1.45;
+    color:var(--ink);letter-spacing:.06em;margin-bottom:24px;
+  }
+  .chapter-subtitle{
+    font-size:15px;color:var(--ink-muted);font-weight:400;
+    letter-spacing:.04em;border-left:2px solid var(--accent-light);
+    padding-left:16px;line-height:1.7;
+  }
+
+  /* SCRIPTURE */
+  .scripture{
+    background:var(--bg-warm);border-left:3px solid var(--accent);
+    padding:26px 30px;margin:48px 0;border-radius:0 4px 4px 0;position:relative;
+  }
+  .scripture::before{
+    content:'✦';position:absolute;top:18px;right:18px;
+    color:var(--accent);opacity:.25;font-size:16px;
+  }
+  .scripture-text{font-size:1.03em;line-height:2.0;color:var(--ink-soft);font-style:italic;margin-bottom:10px}
+  .scripture-ref{font-size:.84em;color:var(--ink-muted);letter-spacing:.06em}
+
+  /* PROSE */
+  .prose p{
+    margin-bottom:1.6em;text-align:justify;text-justify:inter-ideograph;
+    hanging-punctuation:first last;word-break:break-all;overflow-wrap:break-word;
+  }
+  .prose p.lead{font-size:1.07em;color:var(--ink-soft);line-height:2.2;margin-bottom:2em}
+
+  /* SECTION HEADING */
+  .section-heading{
+    font-family:'Shippori Antique B1','Shippori Mincho',serif;
+    font-size:1.2em;font-weight:400;color:var(--ink);
+    letter-spacing:.08em;margin:64px 0 28px;
+    padding-bottom:12px;border-bottom:1px solid var(--rule);
+    display:flex;align-items:baseline;gap:12px;
+  }
+  .section-heading::before{
+    content:attr(data-num);font-size:.7em;color:var(--accent-light);
+    letter-spacing:.1em;font-family:'Shippori Mincho',serif;min-width:28px;
+  }
+
+  /* CONCEPT BOX */
+  .concept-box{
+    border:1px solid var(--rule);padding:26px 30px;margin:44px 0;
+    background:var(--paper);position:relative;
+  }
+  .concept-box-label{
+    position:absolute;top:-10px;left:18px;background:var(--paper);
+    padding:0 8px;font-size:11px;letter-spacing:.12em;color:var(--accent-light);
+  }
+  .concept-box-title{font-size:1.08em;font-weight:600;margin-bottom:12px;color:var(--ink);letter-spacing:.06em}
+  .concept-box p{font-size:.92em;color:var(--ink-soft);line-height:2.0;margin-bottom:.8em}
+  .concept-box p:last-child{margin-bottom:0}
+
+  /* DIAGRAM */
+  .diagram{
+    margin:48px 0;background:var(--bg-warm);
+    border:1px solid var(--rule);padding:32px 24px;overflow-x:auto;
+  }
+  .diagram-title{
+    font-size:12px;letter-spacing:.12em;color:var(--ink-muted);
+    margin-bottom:24px;text-align:center;
+  }
+  .diagram-body{
+    display:flex;align-items:center;justify-content:center;
+    gap:0;flex-wrap:nowrap;overflow-x:auto;
+    font-family:'Shippori Mincho',serif;
+  }
+  .d-node{
+    background:var(--paper);border:1px solid var(--rule);
+    padding:16px 20px;text-align:center;min-width:100px;
+    font-size:13px;line-height:1.7;color:var(--ink-soft);
+    flex-shrink:0;
+  }
+  .d-node strong{display:block;font-size:15px;color:var(--ink);margin-bottom:4px}
+  .d-node.accent{border-color:var(--accent);background:var(--highlight)}
+  .d-node.accent strong{color:var(--accent)}
+  .d-arrow{
+    font-size:20px;color:var(--rule);padding:0 8px;flex-shrink:0;
+    display:flex;align-items:center;
+  }
+  .d-arrow.live{color:var(--accent-light)}
+
+  /* PULL QUOTE */
+  .pull-quote{margin:56px 0;text-align:center;position:relative}
+  .pull-quote-text{
+    font-family:'Shippori Antique B1','Shippori Mincho',serif;
+    font-size:clamp(16px,3vw,21px);color:var(--ink-soft);
+    line-height:1.95;letter-spacing:.08em;padding:0 24px;
+    display:inline-block;
+  }
+  .pull-quote-text::before,.pull-quote-text::after{
+    content:'';display:block;width:40px;height:1px;
+    background:var(--accent-light);margin:14px auto;
+  }
+
+  /* COMPARE TABLE */
+  .compare-table{
+    width:100%;border-collapse:collapse;margin:44px 0;
+    font-size:.92em;
+  }
+  .compare-table th{
+    background:var(--bg-warm);border:1px solid var(--rule);
+    padding:12px 16px;text-align:center;font-weight:600;
+    color:var(--ink-soft);letter-spacing:.06em;font-size:.95em;
+  }
+  .compare-table th.accent{background:var(--highlight);color:var(--accent)}
+  .compare-table td{
+    border:1px solid var(--rule);padding:12px 16px;
+    line-height:1.8;color:var(--ink-soft);vertical-align:top;
+  }
+  .compare-table td.accent{background:var(--highlight);color:var(--ink)}
+  .compare-table tr:hover td{background:var(--highlight)}
+
+  /* FOOTNOTE */
+  .footnote-area{margin-top:80px;padding-top:32px;border-top:1px solid var(--rule)}
+  .footnote-title{font-size:11px;letter-spacing:.15em;color:var(--ink-muted);margin-bottom:20px}
+  .footnote-item{
+    font-size:.84em;color:var(--ink-muted);line-height:1.8;
+    margin-bottom:10px;padding-left:24px;text-indent:-24px;
+  }
+
+  /* CHAPTER NAV */
+  .chapter-nav{
+    display:flex;justify-content:space-between;align-items:stretch;
+    margin-top:96px;padding-top:32px;border-top:1px solid var(--rule);gap:16px;
+  }
+  .nav-btn{
+    display:flex;flex-direction:column;gap:4px;cursor:pointer;
+    text-decoration:none;color:inherit;padding:16px;border:1px solid var(--rule);
+    border-radius:4px;min-width:160px;background:var(--paper);
+    transition:all .2s;flex:1;
+  }
+  .nav-btn:hover{background:var(--highlight);border-color:var(--accent-light)}
+  .nav-btn.disabled{opacity:.25;pointer-events:none}
+  .nav-label{font-size:10px;letter-spacing:.15em;color:var(--ink-muted)}
+  .nav-title{font-size:13px;color:var(--ink-soft);line-height:1.5}
+  .nav-btn.next{text-align:right}
+
+  .word-count-info{text-align:center;font-size:11px;color:var(--ink-muted);margin-top:32px;letter-spacing:.08em}
+
+  /* TOC */
+  #toc{
+    position:fixed;left:24px;top:80px;width:180px;
+    display:none;flex-direction:column;gap:6px;
+  }
+  @media(min-width:1200px){#toc{display:flex}}
+  .toc-item{
+    font-size:11px;color:var(--ink-muted);line-height:1.6;
+    padding:4px 8px;border-left:2px solid transparent;
+    cursor:pointer;transition:all .2s;text-decoration:none;display:block;
+  }
+  .toc-item:hover{color:var(--ink);border-left-color:var(--rule)}
+  .toc-item.active{color:var(--accent-light);border-left-color:var(--accent-light)}
+  .toc-header{font-size:10px;letter-spacing:.15em;color:var(--ink-muted);margin-bottom:8px;padding-left:10px;opacity:.6}
+
+  ruby rt{font-size:.5em}
+  ::selection{background:var(--accent);color:#fff}
+  :focus-visible{outline:2px solid var(--accent-light);outline-offset:2px;border-radius:2px}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  #main>*{animation:fadeUp .55s ease both}
+  .book-meta{animation-delay:.05s}
+  .chapter-header{animation-delay:.12s}
+  .prose{animation-delay:.22s}
+
+  @media(max-width:600px){
+    #main{padding:80px 18px 80px}
+    .scripture,.concept-box{padding:20px 18px}
+    .chapter-nav{flex-direction:column}
+    .nav-btn.next{text-align:left}
+    .diagram-body{flex-direction:column}
+    .d-arrow{transform:rotate(90deg)}
+  }
+  @media print{#toolbar,#toc,#progress-bar{display:none}#main{padding-top:32px}.chapter-nav{display:none}}
+</style>
+</head>
+<body>
+
+<div id="toolbar" role="toolbar" aria-label="読書設定">
+  <span class="tool-label">文字</span>
+  <button class="tool-btn" id="font-down" aria-label="文字を小さく">A−</button>
+  <span id="font-size-display">17</span>
+  <button class="tool-btn" id="font-up" aria-label="文字を大きく">A＋</button>
+  <div class="tool-sep"></div>
+  <span class="tool-label">行間</span>
+  <button class="tool-btn" id="lh-down" aria-label="行間を狭く">≡</button>
+  <button class="tool-btn" id="lh-up" aria-label="行間を広く">≡ ≡</button>
+  <div class="tool-sep"></div>
+  <button class="tool-btn" id="dark-toggle" aria-label="ダーク/ライト切替">☾</button>
+  <div class="tool-spacer"></div>
+  <span class="tool-label" id="read-time-label"></span>
+  <div class="tool-sep"></div>
+  <button class="tool-btn" onclick="window.print()" aria-label="印刷">⎙</button>
+</div>
+
+<div id="progress-bar" role="progressbar" aria-label="読書進捗"></div>
+
+<nav id="toc" aria-label="節目次">
+  <div class="toc-header">目次</div>
+  <a href="#s1" class="toc-item" data-section="s1">序　静止した神の問題</a>
+  <a href="#s2" class="toc-item" data-section="s2">一　出来事としての神</a>
+  <a href="#s3" class="toc-item" data-section="s3">二　ホワイトヘッドとバルト</a>
+  <a href="#s4" class="toc-item" data-section="s4">三　生成事象の三位一体</a>
+  <a href="#s5" class="toc-item" data-section="s5">四　教会論への射程</a>
+  <a href="#s6" class="toc-item" data-section="s6">五　日本的霊性との接続</a>
+  <a href="#s7" class="toc-item" data-section="s7">結び　動きの中に住む</a>
+</nav>
+
+<main id="main">
+
+  <div class="book-meta" aria-label="書誌情報">
+    <span class="book-meta-chapter">第二章</span>
+    <span class="book-meta-sep">｜</span>
+    <span class="book-meta-title">生成事象神学に基づく脱記号化教会論</span>
+  </div>
+
+  <header class="chapter-header">
+    <span class="chapter-number">CHAPTER 02</span>
+    <h1 class="chapter-title">神は出来事である</h1>
+    <p class="chapter-subtitle">
+      生成事象神学の核心——存在論から出来事論へ
+    </p>
+  </header>
+
+  <blockquote class="scripture" aria-label="聖書箇所">
+    <p class="scripture-text">
+      「わたしはある」という者だ。また言われた、「イスラエルの人々にこう言いなさい、<br>
+      『「わたしはある」という方がわたしをあなたたちに遣わされた』と。」
+    </p>
+    <footer class="scripture-ref">出エジプト記 3:14（新共同訳）</footer>
+  </blockquote>
+
+  <div class="prose">
+
+    <p class="lead" id="s1">
+      神学の歴史において、神は長らく「存在するもの」として語られてきた。完全無欠の実体。不動の動者。永遠に変わらぬ絶対者。これらの表現は、ギリシャ哲学とヘブライ信仰が接触した地点から生まれた言語であり、西洋神学の骨格を形成してきた。しかしその骨格は今、軋みを上げている。
+    </p>
+
+    <p>
+      「神は出来事である」——この命題は、一見すると奇妙に響く。出来事は起きる。起きた出来事は過去になる。過去は変えられない。永遠不変であるはずの神が、「出来事」として語られうるのか。
+    </p>
+
+    <p>
+      出エジプト記3章14節に記された神の自己紹介は、この問いに対する聖書の答えである。「わたしはある（エヒイェ・アシェル・エヒイェ）」——ヘブライ語の原文は、完了した状態ではなく、継続する動詞形である。「わたしは在り続ける者」「わたしは起き続ける者」——神の名は、動詞である。
+    </p>
+
+    <h2 class="section-heading" id="s2" data-num="一">出来事としての神——存在論の超克</h2>
+
+    <p>
+      西洋哲学において「存在（Being）」は、変化しないものの優位を前提としてきた。プラトンのイデア、アリストテレスの実体、トマス・アクィナスの「純粋現実態（actus purus）」——これらはすべて、変化・流動・生成を「存在の劣化」として位置づける思考の連鎖のなかにある。
+    </p>
+
+    <p>
+      神学はこの存在論を輸入した。神は変わらない。神は動かされない。神は感情を持たない（不受難性）。神は時間の外にある（永遠性）。これらの属性は、ギリシャ哲学的な「完全な存在」のイメージを神に投影したものである。
+    </p>
+
+    <p>
+      しかし聖書の神は、そのような静止した神ではない。聖書の神は創造し、語りかけ、怒り、悔い、赦し、出会い、関わる。アブラハムと対話し、モーセに火で語りかけ、ヨブの叫びに応答する。これは、「完全に静止した存在」とは根本的に異なる神の像である。
+    </p>
+
+    <div class="pull-quote" aria-label="引用">
+      <div class="pull-quote-text">
+        聖書の神は、名詞ではなく動詞である。<br>
+        存在ではなく、出来事として現れる。
+      </div>
+    </div>
+
+    <p>
+      生成事象神学（Generative Event Theology）は、この聖書的な洞察を現代哲学の語彙で再記述しようとする試みである。神を「完成された実体」ではなく「絶えず生起する関わり」として理解するとき、教会論もまた根本的に変容する。
+    </p>
+
+    <h2 class="section-heading" id="s3" data-num="二">ホワイトヘッドとバルト——二つの出来事論</h2>
+
+    <p>
+      二十世紀の思想において、この方向性を先取りしていた二人の思想家がいる。哲学者アルフレッド・ノース・ホワイトヘッドと、神学者カール・バルトである。両者は直接の対話をほとんど持たなかったが、奇妙なほど平行した洞察を持っていた。
+    </p>
+
+    <p>
+      ホワイトヘッドは、実在の最小単位を「現実的な出来事（actual occasions）」と呼んだ。岩も、細胞も、思考も、すべては一瞬一瞬の「経験の出来事」の積み重ねとして成り立っている。神もまた、この宇宙的な出来事の過程のなかにある——より正確には、出来事の「受け手」であると同時に「呼びかける源泉」として、すべての生成の過程に関わっている。ホワイトヘッドの神は、世界に先行して完成した存在ではなく、世界とともに変化し、世界の喜びを喜び、世界の苦しみを苦しむ神である。
+    </p>
+
+    <p>
+      バルトの洞察は、別の角度から同じ方向を指し示す。バルトにとって神の本質は「関係（Beziehung）」であり、「出来事（Ereignis）」である。三位一体の神は、父・子・霊の永遠の相互関係という「出来事」として存在する。そして神の啓示もまた、普遍的な命題の体系ではなく、具体的な時間・場所・出会いにおける「出来事」として起きる。バルトは「イエス・キリスト」を命題ではなく「出来事の名」として理解した。
+    </p>
+
+    <div class="concept-box" aria-label="概念説明">
+      <span class="concept-box-label">KEY CONCEPT</span>
+      <div class="concept-box-title">生成事象神学（Generative Event Theology）の定義</div>
+      <p>
+        神を「静止した存在（static Being）」ではなく「生起し続ける関わり（ongoing relational event）」として理解する神学的立場。ホワイトヘッドの過程哲学、バルトの啓示論、および現象学的神学（ハイデガー、ティリッヒ）の交差点に位置する。
+      </p>
+      <p>
+        「生成（generative）」とは、神の働きが過去に完結した事実ではなく、今この瞬間も生み出し続けている動的な力であることを意味する。「事象（event）」とは、この働きが普遍的な原理としてではなく、具体的な時間・空間・関係の中で起きることを意味する。
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="s4" data-num="三">生成事象の三位一体——Dynamis・Energeia・Tharsos</h2>
+
+    <p>
+      生成事象神学の核心に、三つの概念がある。ギリシャ語から借用したこれらの語は、神の働きの三つの位相を示す。
+    </p>
+
+    <div class="diagram" aria-label="DET三位一体の図">
+      <div class="diagram-title">生成事象神学の三段階（DET Framework）</div>
+      <div class="diagram-body">
+        <div class="d-node">
+          <strong>Dynamis</strong>
+          デュナミス<br>
+          <small>潜在的な力<br>種・可能性</small>
+        </div>
+        <div class="d-arrow live">→</div>
+        <div class="d-node accent">
+          <strong>Energeia</strong>
+          エネルゲイア<br>
+          <small>現実的な働き<br>出来事・出会い</small>
+        </div>
+        <div class="d-arrow live">→</div>
+        <div class="d-node">
+          <strong>Tharsos</strong>
+          タルソス<br>
+          <small>変容した勇気<br>証言・応答</small>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      <ruby>Dynamis<rt>デュナミス</rt></ruby>は「可能性の力」である。聖書では「デュナミス」は「奇跡」「聖霊の力」を意味する語として頻出する（使徒行伝1:8等）。生成事象神学においてこれは、神の働きの「種」の位相——まだ現れていないが、確かに宿っている潜在的な力——を指す。
+    </p>
+
+    <p>
+      <ruby>Energeia<rt>エネルゲイア</rt></ruby>は「現実化する働き」である。アリストテレスは、可能態（Dynamis）が現実態（Energeia）へと移行する運動を「生成」と呼んだ。しかしここでは、神の「エネルゲイア」はアリストテレスの「完成した静止状態」とは異なる。それは、絶えず更新される現在の出来事——神が今ここで関わっている、この瞬間の「出会い」そのものである。
+    </p>
+
+    <p>
+      <ruby>Tharsos<rt>タルソス</rt></ruby>は「変容した勇気」である。聖書ではイエスが「タルセイ（勇気を持て）」と語りかける場面で用いられる語である。生成事象神学においてこれは、神との出会いによって変容した後の、応答・証言・行動の位相を指す。
+    </p>
+
+    <p>
+      この三段階は、単なる時系列ではない。螺旋的に深まるサイクルとして理解されるべきである。タルソスの応答は、新たなダイナミスの種となる。証言は次の出会いを準備し、出会いはさらなる変容を生む。
+    </p>
+
+    <h2 class="section-heading" id="s5" data-num="四">教会論への射程——制度から出来事へ</h2>
+
+    <p>
+      生成事象神学が教会論に与える影響は、根本的である。
+    </p>
+
+    <p>
+      もし神が「静止した存在」であるならば、教会の役割は「その存在に近づく手段を整備すること」である。礼拝堂を建て、典礼を定め、聖職者を養成し、教義を守る——これらはすべて、固定した実体への接近路を維持するための制度的努力として意味を持つ。
+    </p>
+
+    <p>
+      しかしもし神が「出来事」であるならば、教会の役割は根本的に変わる。教会の使命は、神との出来事が「起きやすい状況を整えること」——つまり、出会いの縁（ふち）を豊かにし、関わりの間（あわい）を開き、応答の余白（よはく）を守ることである。
+    </p>
+
+    <table class="compare-table" aria-label="静止した神vs出来事としての神の比較">
+      <thead>
+        <tr>
+          <th>視点</th>
+          <th>静止した神（存在論）</th>
+          <th class="accent">出来事としての神（生成事象論）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>神の本質</td>
+          <td>完全・不変の実体</td>
+          <td class="accent">絶えず生起する関わり</td>
+        </tr>
+        <tr>
+          <td>礼拝の意味</td>
+          <td>神への義務的接近</td>
+          <td class="accent">出来事の準備と受容</td>
+        </tr>
+        <tr>
+          <td>教会の機能</td>
+          <td>制度の維持・伝達</td>
+          <td class="accent">出会いの場の設計</td>
+        </tr>
+        <tr>
+          <td>信仰の成熟</td>
+          <td>教義の正確な把握</td>
+          <td class="accent">Dynamis→Tharsos の深まり</td>
+        </tr>
+        <tr>
+          <td>宣教の目的</td>
+          <td>組織への加入</td>
+          <td class="accent">出来事への招き</td>
+        </tr>
+        <tr>
+          <td>失敗の意味</td>
+          <td>規範からの逸脱</td>
+          <td class="accent">次の出来事への素材</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      この転換は、教会を弱体化させることにはならない。むしろ、制度の維持に縛られた教会を、出来事の生成に向けて開放することである。礼拝堂がなくても、牧師がいなくても、神との出来事は起きうる——というこの確信は、教会制度の否定ではなく、神の恵みの拡張である。
+    </p>
+
+    <h2 class="section-heading" id="s6" data-num="五">日本的霊性との接続——「間」の神学</h2>
+
+    <p>
+      ここで、日本語の「<ruby>間<rt>ま・あわい</rt></ruby>」という概念が、予想外の神学的豊かさを持つことに気づく。
+    </p>
+
+    <p>
+      「間」は、空間的な隙間であると同時に、時間的な余地であり、関係的な緊張の場である。茶道の「間」、能楽の「間」、建築の「間取り」——これらすべてにおいて、「間」は空虚ではなく、充実した「何かが起きる場」として機能する。
+    </p>
+
+    <p>
+      生成事象神学の視点から見るとき、「間」とは神の出来事が生起する場の日本語的表現ではないか。礼拝の沈黙は「間」であり、告白の後の静けさは「間」であり、病床における言葉の途切れは「間」である。これらの「間」において、神の出来事は起きる。
+    </p>
+
+    <p>
+      日本のプロテスタント教会が、西洋神学の語彙をそのまま輸入し続けてきたことには、深刻な代償がある。日本人の霊性が長年かけて洗練させてきた「間の感覚」——充実した空虚、沈黙の饒舌、余白の意味——これらは、生成事象神学と驚くほど親和的な土壌である。しかしこの土壌は、制度的な教会語によって覆い隠されたまま、ほとんど活用されてこなかった。
+    </p>
+
+    <div class="concept-box" aria-label="概念説明">
+      <span class="concept-box-label">KEY CONCEPT</span>
+      <div class="concept-box-title">Hebel³（ヘベルキューブ）と生成事象神学の対応</div>
+      <p>
+        <strong>縁（ふち）＝ Dynamis</strong>：出来事の種が宿る可能性の接続点。偶然の出会いが、実は神の潜在的な働きとして読み解かれうる場。
+      </p>
+      <p>
+        <strong>間（あわい）＝ Energeia</strong>：神の出来事が現実に生起する「今ここ」の空間。記号と出来事のあいだ、制度と生命のあいだ。
+      </p>
+      <p>
+        <strong>余白（よはく）＝ Tharsos への準備</strong>：変容の後に必要な沈黙と統合。次の出来事を受け入れるために開かれていること。
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="s7" data-num="結び">動きの中に住む——第二章のまとめ</h2>
+
+    <p>
+      神は出来事である。
+    </p>
+
+    <p>
+      この命題は、信仰の不安定化を意味しない。むしろ、信仰の根拠を「固定した制度」から「生きている関係」へと移し替える宣言である。砂の上の家と岩の上の家の喩えを、イエスは語った（マタイ7:24-27）。岩の上に建てられた家は揺るがない——しかしその「岩」とは何か。教義体系か。礼拝形式か。それとも、生きた神との出来事的な出会いそのものか。
+    </p>
+
+    <p>
+      生成事象神学の立場から答えるならば：岩とは、動くことで動かせない神の働きである。風が吹き、雨が降り、洪水が押し寄せる——それでも家は倒れなかった。家は「固まった安全」ではなく「動かされながらも保たれる関係」の中に立っていたのである。
+    </p>
+
+    <p>
+      次章では、この「出来事としての神」という理解が、具体的な共同体論にどのように接続されるかを探る。DAO（Distributed Autonomous Organization）という現代的な組織論のモデルと、脱記号化した教会の形が、思いがけない親和性を持つことが見えてくるだろう。
+    </p>
+
+  </div>
+
+  <aside class="footnote-area" aria-label="注">
+    <div class="footnote-title">注　および参考文献（第二章）</div>
+    <p class="footnote-item">*1　ヘブライ語「エヒイェ（אֶֽהְיֶ֖ה）」は、ヒフィル未完了形であり、「在り続ける」「起き続ける」という継続の意味を含む。参照：W.F.アルブライト『聖書の考古学』およびM.ノート『出エジプト記注解』。</p>
+    <p class="footnote-item">*2　A.N.ホワイトヘッド『過程と実在（Process and Reality）』（1929）。日本語訳：山本誠作・訳（1984）。「現実的機会（actual occasion）」概念については同書 Part II, Chapter II を参照。</p>
+    <p class="footnote-item">*3　カール・バルト『教会教義学』（Kirchliche Dogmatik）、特にII/1「神の存在は出来事における在ること（Sein im Akt）である」という定式化。</p>
+    <p class="footnote-item">*4　ポール・ティリッヒ『組織神学』（Systematic Theology）における「存在の力（power of being）」概念も、静止した存在論を超えようとする同様の試みとして参照されるべきである。</p>
+    <p class="footnote-item">*5　「間（ま）」の日本美学的意味については、篠山紀信・西田幾多郎・川喜田煕らの議論を参照。神学的応用としては加藤常昭『日本語の説教』（2003）も参考になる。</p>
+  </aside>
+
+  <div class="word-count-info" aria-label="本文情報">
+    本文：約 <span id="char-count">0</span> 字　｜　推定読了時間：<span id="read-minutes">0</span> 分
+  </div>
+
+  <nav class="chapter-nav" aria-label="章ナビゲーション">
+    <a href="nsppt_chapter1_reader.html" class="nav-btn">
+      <span class="nav-label">◀ 前の章</span>
+      <span class="nav-title">第一章　空の鳥を見なさい</span>
+    </a>
+    <a href="nsppt_chapter3_reader.html" class="nav-btn next">
+      <span class="nav-label">次の章 ▶</span>
+      <span class="nav-title">第三章　DAO教会論——分散型共同体の神学的根拠</span>
+    </a>
+  </nav>
+
+</main>
+
+<script>
+  let fontSize = 17, lh = 2.1;
+  const body = document.body;
+  const fontDisplay = document.getElementById('font-size-display');
+
+  document.getElementById('font-up').addEventListener('click', () => { if(fontSize<24){fontSize++;body.style.fontSize=fontSize+'px';fontDisplay.textContent=fontSize} });
+  document.getElementById('font-down').addEventListener('click', () => { if(fontSize>13){fontSize--;body.style.fontSize=fontSize+'px';fontDisplay.textContent=fontSize} });
+  document.getElementById('lh-up').addEventListener('click', () => { if(lh<2.8){lh=Math.round((lh+.2)*10)/10;body.style.lineHeight=lh} });
+  document.getElementById('lh-down').addEventListener('click', () => { if(lh>1.6){lh=Math.round((lh-.2)*10)/10;body.style.lineHeight=lh} });
+
+  const darkBtn = document.getElementById('dark-toggle');
+  darkBtn.addEventListener('click', () => {
+    body.classList.toggle('dark');
+    darkBtn.textContent = body.classList.contains('dark') ? '☀' : '☾';
+    darkBtn.classList.toggle('active', body.classList.contains('dark'));
+  });
+
+  const progressBar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    progressBar.style.width = Math.min(pct, 100) + '%';
+  }, { passive: true });
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        document.querySelectorAll('.toc-item').forEach(t => t.classList.remove('active'));
+        const t = document.querySelector(`.toc-item[data-section="${e.target.id}"]`);
+        if (t) t.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -60% 0px' });
+  document.querySelectorAll('[id^="s"]').forEach(s => obs.observe(s));
+
+  const prose = document.querySelector('.prose');
+  if (prose) {
+    const count = (prose.innerText||'').replace(/\s/g,'').length;
+    document.getElementById('char-count').textContent = count.toLocaleString('ja-JP');
+    const mins = Math.ceil(count/400);
+    document.getElementById('read-minutes').textContent = mins;
+    document.getElementById('read-time-label').textContent = `残り約${mins}分`;
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'})}
+    });
+  });
+</script>
+</body>
+</html>

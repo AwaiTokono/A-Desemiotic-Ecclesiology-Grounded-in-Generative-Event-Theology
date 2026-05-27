@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>空の鳥への応答｜終章｜脱記号化教会論</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500&family=Shippori+Antique+B1&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f1ea;
+    --bg-warm: #ece7db;
+    --paper: #f9f6ef;
+    --ink: #1c1810;
+    --ink-soft: #362e20;
+    --ink-muted: #74685a;
+    --accent: #5a3e20;
+    --accent-light: #9a6a30;
+    --accent-gold: #b8901a;
+    --accent-green: #3a6040;
+    --rule: #c8bfae;
+    --highlight: #e4dcd0;
+    --font-base: 17px;
+    --line-height: 2.1;
+    --chapter-width: 700px;
+    --side-pad: clamp(24px, 8vw, 120px);
+  }
+  body.dark {
+    --bg: #100e0a;
+    --bg-warm: #1a1812;
+    --paper: #201c16;
+    --ink: #e8e0d0;
+    --ink-soft: #c4baa8;
+    --ink-muted: #78685a;
+    --accent: #d0905a;
+    --accent-light: #e8b070;
+    --accent-gold: #d4a830;
+    --accent-green: #70a870;
+    --rule: #3a3020;
+    --highlight: #2a2418;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Shippori Mincho','Noto Serif JP',serif;font-size:var(--font-base);line-height:var(--line-height);-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+
+  #toolbar{position:fixed;top:0;left:0;right:0;height:52px;background:var(--paper);border-bottom:1px solid var(--rule);display:flex;align-items:center;padding:0 20px;gap:10px;z-index:100;transition:background .3s,border-color .3s}
+  .tool-label{font-size:11px;color:var(--ink-muted);letter-spacing:.08em;font-family:'JetBrains Mono',monospace;user-select:none;white-space:nowrap}
+  .tool-btn{background:var(--bg-warm);border:1px solid var(--rule);color:var(--ink-soft);padding:5px 12px;font-family:inherit;font-size:13px;cursor:pointer;border-radius:3px;transition:all .15s;min-height:32px;min-width:32px;white-space:nowrap}
+  .tool-btn:hover{background:var(--highlight);color:var(--ink)}
+  .tool-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .tool-sep{width:1px;height:24px;background:var(--rule);margin:0 2px}
+  .tool-spacer{flex:1}
+  #font-size-display{font-size:12px;color:var(--ink-muted);min-width:26px;text-align:center}
+  #progress-bar{position:fixed;top:52px;left:0;height:2px;background:var(--accent-light);width:0%;transition:width .1s linear;z-index:99}
+
+  #main{max-width:var(--chapter-width);margin:0 auto;padding:96px var(--side-pad) 120px}
+
+  .book-meta{display:flex;align-items:center;gap:12px;margin-bottom:52px;padding-bottom:24px;border-bottom:1px solid var(--rule)}
+  .book-meta-chapter{font-size:11px;letter-spacing:.15em;font-family:'JetBrains Mono',monospace;color:var(--ink-muted)}
+  .book-meta-sep{color:var(--rule)}
+  .book-meta-title{font-size:12px;color:var(--ink-muted);font-weight:400}
+
+  /* FINAL CHAPTER HEADER — より重厚に */
+  .chapter-header{margin-bottom:72px;text-align:center;padding:0 0 48px;border-bottom:1px solid var(--rule)}
+  .chapter-number{font-size:11px;letter-spacing:.25em;font-family:'JetBrains Mono',monospace;color:var(--accent-light);margin-bottom:24px;display:block}
+  .chapter-eyebrow{font-size:12px;letter-spacing:.2em;color:var(--ink-muted);margin-bottom:16px;display:block}
+  .chapter-title{
+    font-family:'Shippori Antique B1','Shippori Mincho',serif;
+    font-size:clamp(26px,5.5vw,42px);font-weight:400;line-height:1.4;
+    color:var(--ink);letter-spacing:.08em;margin-bottom:28px;
+  }
+  .chapter-subtitle{
+    font-size:15px;color:var(--ink-muted);font-weight:400;
+    letter-spacing:.04em;line-height:1.8;
+    max-width:520px;margin:0 auto;
+  }
+  .chapter-rule{width:60px;height:1px;background:var(--accent-light);margin:24px auto 0}
+
+  .scripture{background:var(--bg-warm);border-left:3px solid var(--accent);padding:26px 30px;margin:48px 0;border-radius:0 4px 4px 0;position:relative}
+  .scripture::before{content:'✦';position:absolute;top:18px;right:18px;color:var(--accent);opacity:.22;font-size:16px}
+  .scripture-text{font-size:1.03em;line-height:2.0;color:var(--ink-soft);font-style:italic;margin-bottom:10px}
+  .scripture-ref{font-size:.84em;color:var(--ink-muted);letter-spacing:.06em}
+
+  .prose p{margin-bottom:1.6em;text-align:justify;text-justify:inter-ideograph;hanging-punctuation:first last;word-break:break-all;overflow-wrap:break-word}
+  .prose p.lead{font-size:1.09em;color:var(--ink-soft);line-height:2.3;margin-bottom:2em}
+
+  .section-heading{font-family:'Shippori Antique B1','Shippori Mincho',serif;font-size:1.2em;font-weight:400;color:var(--ink);letter-spacing:.08em;margin:64px 0 28px;padding-bottom:12px;border-bottom:1px solid var(--rule);display:flex;align-items:baseline;gap:12px}
+  .section-heading::before{content:attr(data-num);font-size:.7em;color:var(--accent-light);letter-spacing:.1em;font-family:'Shippori Mincho',serif;min-width:28px}
+
+  .concept-box{border:1px solid var(--rule);padding:26px 30px;margin:44px 0;background:var(--paper);position:relative}
+  .concept-box-label{position:absolute;top:-10px;left:18px;background:var(--paper);padding:0 8px;font-size:11px;letter-spacing:.12em;color:var(--accent-light)}
+  .concept-box-title{font-size:1.08em;font-weight:600;margin-bottom:12px;color:var(--ink);letter-spacing:.06em}
+  .concept-box p{font-size:.92em;color:var(--ink-soft);line-height:2.0;margin-bottom:.8em}
+  .concept-box p:last-child{margin-bottom:0}
+
+  .pull-quote{margin:56px 0;text-align:center}
+  .pull-quote-text{font-family:'Shippori Antique B1','Shippori Mincho',serif;font-size:clamp(17px,3vw,23px);color:var(--ink-soft);line-height:1.95;letter-spacing:.08em;padding:0 24px;display:inline-block}
+  .pull-quote-text::before,.pull-quote-text::after{content:'';display:block;width:40px;height:1px;background:var(--accent-light);margin:16px auto}
+
+  /* SYNTHESIS TABLE */
+  .synthesis{margin:48px 0;border:1px solid var(--rule);overflow:hidden}
+  .synthesis-header{background:var(--bg-warm);padding:13px 22px;font-size:11px;letter-spacing:.15em;color:var(--ink-muted);border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center}
+  .synthesis-header strong{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:.04em}
+  .synthesis-row{display:grid;grid-template-columns:140px 1fr;gap:0;border-bottom:1px solid var(--rule)}
+  .synthesis-row:last-child{border-bottom:none}
+  .synthesis-row:hover{background:var(--highlight)}
+  .syn-key{padding:18px 20px;font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.06em;border-right:1px solid var(--rule);display:flex;align-items:flex-start;padding-top:20px}
+  .syn-val{padding:18px 20px}
+  .syn-val-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;letter-spacing:.04em}
+  .syn-val-body{font-size:.9em;color:var(--ink-soft);line-height:1.9}
+
+  /* LIMITATION BOX */
+  .limitation-box{border:1px solid var(--rule);padding:26px 30px;margin:44px 0;background:var(--bg-warm);position:relative}
+  .limitation-box-label{position:absolute;top:-10px;left:18px;background:var(--bg-warm);padding:0 8px;font-size:11px;letter-spacing:.12em;color:var(--ink-muted)}
+  .limitation-box-title{font-size:1.05em;font-weight:600;margin-bottom:12px;color:var(--ink-soft);letter-spacing:.04em}
+  .limitation-list{list-style:none;display:flex;flex-direction:column;gap:14px}
+  .limitation-item{display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:start}
+  .limitation-num{font-size:11px;color:var(--accent-light);letter-spacing:.08em;padding-top:3px;font-family:'Shippori Mincho',serif}
+  .limitation-body{font-size:.9em;color:var(--ink-soft);line-height:1.9}
+  .limitation-body strong{color:var(--ink);display:block;margin-bottom:3px;font-size:.95em}
+
+  /* BIRD MEDITATION — closing poetic section */
+  .bird-section{
+    margin:72px 0 56px;
+    padding:48px 40px;
+    background:var(--bg-warm);
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    text-align:center;
+    position:relative;
+  }
+  .bird-section::before{
+    content:'';
+    display:block;
+    width:1px;height:40px;
+    background:var(--rule);
+    margin:0 auto 32px;
+  }
+  .bird-text{
+    font-family:'Shippori Antique B1','Shippori Mincho',serif;
+    font-size:clamp(15px,2.8vw,20px);
+    line-height:2.4;
+    color:var(--ink-soft);
+    letter-spacing:.1em;
+    max-width:480px;
+    margin:0 auto;
+  }
+  .bird-text em{
+    display:block;
+    font-style:normal;
+    font-size:.85em;
+    color:var(--ink-muted);
+    margin-top:20px;
+    letter-spacing:.06em;
+    line-height:1.8;
+  }
+  .bird-section::after{
+    content:'';
+    display:block;
+    width:1px;height:40px;
+    background:var(--rule);
+    margin:32px auto 0;
+  }
+
+  /* FRAMEWORK FINAL SUMMARY */
+  .framework-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:44px 0;border:1px solid var(--rule);overflow:hidden}
+  .fw-cell{padding:20px 18px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+  .fw-cell:nth-child(3n){border-right:none}
+  .fw-cell.header{background:var(--bg-warm);font-size:11px;letter-spacing:.1em;color:var(--ink-muted);font-weight:600;text-align:center;padding:12px}
+  .fw-cell.span3{grid-column:1/-1;border-right:none;background:var(--highlight);padding:14px 20px;font-size:.9em;color:var(--ink-soft);line-height:1.9}
+  .fw-cell.no-bottom{border-bottom:none}
+  .fw-name{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:6px;letter-spacing:.04em}
+  .fw-abbr{font-size:10px;letter-spacing:.1em;color:var(--ink-muted);margin-bottom:8px}
+  .fw-body{font-size:.86em;color:var(--ink-soft);line-height:1.8}
+
+  /* CLOSING COLOPHON */
+  .colophon{
+    margin-top:80px;padding:40px 32px;
+    border:1px solid var(--rule);
+    background:var(--paper);
+    text-align:center;
+  }
+  .colophon-title{
+    font-family:'Shippori Antique B1','Shippori Mincho',serif;
+    font-size:18px;color:var(--ink);
+    letter-spacing:.1em;margin-bottom:20px;
+  }
+  .colophon-body{
+    font-size:.9em;color:var(--ink-muted);line-height:2.1;
+    max-width:460px;margin:0 auto 24px;
+  }
+  .colophon-rule{width:40px;height:1px;background:var(--rule);margin:0 auto 20px}
+  .colophon-sig{
+    font-family:'Shippori Antique B1','Shippori Mincho',serif;
+    font-size:14px;color:var(--ink-soft);letter-spacing:.12em;
+  }
+  .colophon-place{font-size:12px;color:var(--ink-muted);margin-top:6px;letter-spacing:.08em}
+
+  .footnote-area{margin-top:80px;padding-top:32px;border-top:1px solid var(--rule)}
+  .footnote-title{font-size:11px;letter-spacing:.15em;color:var(--ink-muted);margin-bottom:20px}
+  .footnote-item{font-size:.84em;color:var(--ink-muted);line-height:1.8;margin-bottom:10px;padding-left:24px;text-indent:-24px}
+
+  .chapter-nav{display:flex;justify-content:space-between;align-items:stretch;margin-top:96px;padding-top:32px;border-top:1px solid var(--rule);gap:16px}
+  .nav-btn{display:flex;flex-direction:column;gap:4px;text-decoration:none;color:inherit;padding:16px;border:1px solid var(--rule);border-radius:4px;min-width:160px;background:var(--paper);transition:all .2s;flex:1}
+  .nav-btn:hover{background:var(--highlight);border-color:var(--accent-light)}
+  .nav-btn.disabled{opacity:.25;pointer-events:none}
+  .nav-label{font-size:10px;letter-spacing:.15em;color:var(--ink-muted)}
+  .nav-title{font-size:13px;color:var(--ink-soft);line-height:1.5}
+  .word-count-info{text-align:center;font-size:11px;color:var(--ink-muted);margin-top:32px;letter-spacing:.08em}
+
+  #toc{position:fixed;left:24px;top:80px;width:180px;display:none;flex-direction:column;gap:6px}
+  @media(min-width:1200px){#toc{display:flex}}
+  .toc-item{font-size:11px;color:var(--ink-muted);line-height:1.6;padding:4px 8px;border-left:2px solid transparent;cursor:pointer;transition:all .2s;text-decoration:none;display:block}
+  .toc-item:hover{color:var(--ink);border-left-color:var(--rule)}
+  .toc-item.active{color:var(--accent-light);border-left-color:var(--accent-light)}
+  .toc-header{font-size:10px;letter-spacing:.15em;color:var(--ink-muted);margin-bottom:8px;padding-left:10px;opacity:.6}
+
+  ruby rt{font-size:.5em}
+  ::selection{background:var(--accent);color:#fff}
+  :focus-visible{outline:2px solid var(--accent-light);outline-offset:2px;border-radius:2px}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  #main>*{animation:fadeUp .6s ease both}
+  .book-meta{animation-delay:.05s}
+  .chapter-header{animation-delay:.15s}
+  .prose{animation-delay:.28s}
+
+  @media(max-width:600px){
+    #main{padding:80px 18px 80px}
+    .scripture,.concept-box,.limitation-box{padding:20px 18px}
+    .chapter-nav{flex-direction:column}
+    .synthesis-row{grid-template-columns:1fr}
+    .syn-key{border-right:none;border-bottom:1px solid var(--rule);padding-bottom:10px}
+    .framework-grid{grid-template-columns:1fr}
+    .fw-cell:nth-child(3n){border-right:none}
+    .fw-cell{border-right:none}
+    .fw-cell.span3{grid-column:1}
+    .bird-section{padding:36px 20px}
+    .colophon{padding:28px 20px}
+  }
+  @media print{#toolbar,#toc,#progress-bar{display:none}#main{padding-top:32px}.chapter-nav{display:none}}
+</style>
+</head>
+<body>
+
+<div id="toolbar" role="toolbar" aria-label="読書設定">
+  <span class="tool-label">文字</span>
+  <button class="tool-btn" id="font-down" aria-label="文字を小さく">A−</button>
+  <span id="font-size-display">17</span>
+  <button class="tool-btn" id="font-up" aria-label="文字を大きく">A＋</button>
+  <div class="tool-sep"></div>
+  <span class="tool-label">行間</span>
+  <button class="tool-btn" id="lh-down">≡</button>
+  <button class="tool-btn" id="lh-up">≡ ≡</button>
+  <div class="tool-sep"></div>
+  <button class="tool-btn" id="dark-toggle" aria-label="ダーク/ライト切替">☾</button>
+  <div class="tool-spacer"></div>
+  <span class="tool-label" id="read-time-label"></span>
+  <div class="tool-sep"></div>
+  <button class="tool-btn" onclick="window.print()" aria-label="印刷">⎙</button>
+</div>
+<div id="progress-bar" role="progressbar" aria-label="読書進捗"></div>
+
+<nav id="toc" aria-label="節目次">
+  <div class="toc-header">目次</div>
+  <a href="#s1" class="toc-item" data-section="s1">序　旅の終わりに</a>
+  <a href="#s2" class="toc-item" data-section="s2">一　全体の総括</a>
+  <a href="#s3" class="toc-item" data-section="s3">二　フレームワークの統合</a>
+  <a href="#s4" class="toc-item" data-section="s4">三　射程と限界</a>
+  <a href="#s5" class="toc-item" data-section="s5">四　問い直しへの応答</a>
+  <a href="#s6" class="toc-item" data-section="s6">五　次の問いへ</a>
+  <a href="#s7" class="toc-item" data-section="s7">結び　空の鳥への応答</a>
+</nav>
+
+<main id="main">
+
+  <div class="book-meta" aria-label="書誌情報">
+    <span class="book-meta-chapter">終　章</span>
+    <span class="book-meta-sep">｜</span>
+    <span class="book-meta-title">生成事象神学に基づく脱記号化教会論</span>
+  </div>
+
+  <header class="chapter-header">
+    <span class="chapter-number">FINAL CHAPTER</span>
+    <span class="chapter-eyebrow">第八章</span>
+    <h1 class="chapter-title">空の鳥への応答</h1>
+    <p class="chapter-subtitle">
+      脱記号化教会論の総括と展望——<br>
+      問いを携えて、荒れ野へ戻る
+    </p>
+    <div class="chapter-rule"></div>
+  </header>
+
+  <blockquote class="scripture" aria-label="聖書箇所">
+    <p class="scripture-text">
+      空の鳥を見なさい。種も蒔かず、刈り入れもせず、倉に納めもしない。<br>
+      それでも、あなたがたの天の父は鳥を養ってくださる。<br>
+      あなたがたは鳥よりもはるかに価値があるではないか。
+    </p>
+    <footer class="scripture-ref">マタイによる福音書 6:26（新共同訳）——第一章への回帰</footer>
+  </blockquote>
+
+  <div class="prose">
+
+    <p class="lead" id="s1">
+      旅は、出発点に戻ることで完成する。しかし戻ってきた者は、出発したときと同じ目で同じ場所を見ない。同じ言葉が、別の深さで響く。「空の鳥を見なさい」——この命令を、本書の最初のページで受け取ったときと、七章を歩み抜いた今とでは、聞こえ方が違うはずだ。
+    </p>
+
+    <p>
+      本書は、一つの問いから始まった。なぜ日本のプロテスタント教会は、これほどまでに「教会」の外にいる人々に届かないのか。そしてその問いは、より根本的な問いへと深まっていった。神の出来事は、今どこで起きているのか。教会という制度の外で、神は何をしているのか。
+    </p>
+
+    <p>
+      七つの章を通じて、私たちはこれらの問いと格闘してきた。答えを見つけたとは言えない。しかし問いの形が、より正確になった。そして正確な問いは、誤った答えよりも価値がある。
+    </p>
+
+    <h2 class="section-heading" id="s2" data-num="一">全体の総括——七つの旅程の意味</h2>
+
+    <p>
+      第一章では、「空の鳥」のメタファーから出発し、象徴を持たない存在と神の関係を問うた。記号なしに神は働くこと、そしてその洞察が「脱記号化」という神学的方向性を要請することを示した。
+    </p>
+
+    <p>
+      第二章では、その方向性の哲学的・神学的基盤として「生成事象神学」を提示した。神は名詞ではなく動詞である。静止した存在ではなく、絶えず生起する出来事として神を理解するとき、教会論もまた根本的に変容する。ホワイトヘッドとバルトという二つの流れを合流させ、DETフレームワーク（Dynamis・Energeia・Tharsos）を提案した。
+    </p>
+
+    <p>
+      第三章では、この神学を共同体設計に接続するために、DAO（分散型自律組織）の概念を参照した。初代ペンテコステがすでに分散型自律共同体であったという洞察のもと、三リング構造・PK-Ring（ペリコレーシス・カイロス環）・GratiaUnitという設計語彙を展開した。
+    </p>
+
+    <p>
+      第四章では、抽象的な神学を地に足のついた宣教論として語るために、新篠津村という具体的な場所に降り立った。過疎・光ファイバー・星空・農業共同体——これらの「辺縁の資源」が、脱記号化宣教の豊かな土壌であることを示した。「ナザレから何か良いものが出るだろうか」という問いへの応答として。
+    </p>
+
+    <p>
+      第五章では、神学と技術の接続を試みた。#AWAIの実践設計を、BroadListening宣教・PK-Ringの技術的実装・MINISTシステムとの統合として描いた。同時に、テクノロジーの三つの誘惑（効率化・可視化・代替）を正直に直視した。
+    </p>
+
+    <p>
+      第六章では、脱記号化教会の制度的骨格を具体的に設計した。建物・牧師・名簿という三制度の批判的検討から始まり、建築的メタファー・シャバット週次サイクル・十二セル構造・七条の最小憲法へと展開した。
+    </p>
+
+    <p>
+      第七章では、JPCDPのデータを神学的に読解し、日本宣教の未来地図を描いた。九地方の神学的可能性・MSIブレンド指標・三シナリオ・地域別介入設計・R7〜R12の実装計画を提示した。
+    </p>
+
+    <h2 class="section-heading" id="s3" data-num="二">フレームワークの統合——NSPPTの全体像</h2>
+
+    <p>
+      本書で展開してきた諸概念は、「NSPPT（Non-Symbolic Post-Protestantism Theology）」というフレームワークの中に有機的に統合される。以下に、その全体像を整理する。
+    </p>
+
+    <div class="synthesis" aria-label="NSPPTフレームワークの総括">
+      <div class="synthesis-header">
+        <strong>NSPPTフレームワーク　総括</strong>
+        <span style="font-size:11px;color:var(--ink-muted)">Non-Symbolic Post-Protestantism Theology</span>
+      </div>
+      <div class="synthesis-row">
+        <div class="syn-key">神学的基盤</div>
+        <div class="syn-val">
+          <div class="syn-val-title">生成事象神学（Generative Event Theology）</div>
+          <div class="syn-val-body">神を「静止した存在」ではなく「絶えず生起する出来事」として理解する。ホワイトヘッドの過程哲学・バルトの啓示論・ティリッヒの存在の力論を統合した立場。出エジプト3:14の「わたしはある（エヒイェ）」の動詞性に根拠を置く。</div>
+        </div>
+      </div>
+      <div class="synthesis-row">
+        <div class="syn-key">時間論的構造</div>
+        <div class="syn-val">
+          <div class="syn-val-title">DETフレームワーク（Dynamis・Energeia・Tharsos）</div>
+          <div class="syn-val-body">神の出来事の三段階的位相。潜在的な力（Dynamis）→現実化する出来事（Energeia）→変容した応答（Tharsos）。螺旋的に深まるサイクルとして機能し、シャバット（安息）を基点とする週次リズムに組み込まれる。</div>
+        </div>
+      </div>
+      <div class="synthesis-row">
+        <div class="syn-key">空間論的構造</div>
+        <div class="syn-val">
+          <div class="syn-val-title">Hebel³（ヘベルキューブ）——縁（ふち）・間（あわい）・余白</div>
+          <div class="syn-val-body">神の出来事が生起する三次元的な空間設計。縁（ふち）は接触と出会いの可能性の場（Dynamis対応）、間（あわい）は出来事が現実に生起する場（Energeia対応）、余白は変容後の統合と次への準備の場（Tharsos対応）。日本語の空間感覚と神学の架橋。</div>
+        </div>
+      </div>
+      <div class="synthesis-row">
+        <div class="syn-key">共同体論的構造</div>
+        <div class="syn-val">
+          <div class="syn-val-title">PK-Ring（ペリコレーシス・カイロス環）× 三リング構造</div>
+          <div class="syn-val-body">三位一体の相互内在（ペリコレーシス）が、神の決定的な時（カイロス）において共同体の中で反響・循環する構造。外リング（縁・ふち）・中リング（間）・内リング（余白）の三圏域が、求心ではなく遠心の運動によって繋がれる。</div>
+        </div>
+      </div>
+      <div class="synthesis-row">
+        <div class="syn-key">実践的記録系</div>
+        <div class="syn-val">
+          <div class="syn-val-title">MINIST × BroadListening の統合回路</div>
+          <div class="syn-val-body">霊的出来事の内的記録（MINIST六次元スキーマ）と社会的声の外的記録（BroadListening）が、同一のPK-Ring回路として統合される。神学と社会・内面と共同体・祈りと政策の人工的二項対立を解消する実践的試み。</div>
+        </div>
+      </div>
+      <div class="synthesis-row">
+        <div class="syn-key">宣教論的構造</div>
+        <div class="syn-val">
+          <div class="syn-val-title">辺縁→中心型宣教 × 福音アクセス密度の再定義</div>
+          <div class="syn-val-body">中心から辺縁への一方向的宣教から、辺縁が中心に語りかける「反転型宣教」への転換。制度的密度ではなく出来事生起条件によって測られる「福音アクセス密度」の新指標。新篠津モデルを原型とする農村・過疎地宣教論。</div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      これらの要素が有機的に連動するとき、NSPPTは単なる神学的概念の集積ではなく、「出来事が生きる共同体」の設計思想となる。概念は道具であり、道具は使われるために作られる。
+    </p>
+
+    <h2 class="section-heading" id="s4" data-num="三">射程と限界——誠実な自己評価</h2>
+
+    <p>
+      神学的誠実さは、自らの主張の限界を正面から記述することを要求する。NSPPTフレームワークには、いくつかの本質的な限界がある。
+    </p>
+
+    <div class="limitation-box" aria-label="NSPPTの限界">
+      <span class="limitation-box-label">HONEST LIMITATION</span>
+      <div class="limitation-box-title">NSPPTフレームワークの限界と残された問い</div>
+      <ul class="limitation-list">
+        <li class="limitation-item">
+          <div class="limitation-num">01</div>
+          <div class="limitation-body">
+            <strong>実証的根拠の薄さ</strong>
+            本書が提案する「出来事生起条件」としての福音アクセス密度や、三リング共同体の有効性は、現時点では新篠津という一事例に基づく仮説に過ぎない。より広範な事例研究と比較宣教学的な検証が必要である。
+          </div>
+        </li>
+        <li class="limitation-item">
+          <div class="limitation-num">02</div>
+          <div class="limitation-body">
+            <strong>聖霊論の未展開</strong>
+            本書はDETフレームワークを展開したが、「誰が出来事を生起させるのか」という聖霊論的問いを十分に展開できなかった。DETとPN（Pneumatology）の統合は、次の研究課題として残されている。
+          </div>
+        </li>
+        <li class="limitation-item">
+          <div class="limitation-num">03</div>
+          <div class="limitation-body">
+            <strong>秘跡論・聖礼典論の欠如</strong>
+            脱記号化教会論は、洗礼と聖餐という二大秘跡をどう位置づけるかについて、本書では踏み込まなかった。これらは「出来事の記号」として最も洗練された神学的実践であり、単純に「脱記号化」できない深みを持つ。
+          </div>
+        </li>
+        <li class="limitation-item">
+          <div class="limitation-num">04</div>
+          <div class="limitation-body">
+            <strong>女性神学・フェミニスト神学との対話の不足</strong>
+            権力の分散・辺縁の優位・声の可視化という本書の主要命題は、女性神学・解放神学が長年主張してきたことと深く共鳴する。しかし本書はこれらとの十分な対話を持てなかった。
+          </div>
+        </li>
+        <li class="limitation-item">
+          <div class="limitation-num">05</div>
+          <div class="limitation-body">
+            <strong>テクノロジー依存への批判への応答の不完全さ</strong>
+            第五章でテクノロジーの誘惑を論じたが、「デジタル格差」「高齢者のアクセス困難」「プラットフォーム企業への依存」といった具体的問題への応答は不十分なままである。UDの徹底という原則が、実装においてどこまで貫けるかは未解決の問題だ。
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <p>
+      これらの限界を記すことは、本書の主張を取り下げることではない。限界を自覚した上で立つことは、限界を隠して立つことより、ずっと堅固な地盤である。
+    </p>
+
+    <h2 class="section-heading" id="s5" data-num="四">予想される問い直しへの応答</h2>
+
+    <p>
+      本書の論旨に対して、いくつかの批判的問いが予想される。ここでそれらに誠実に向き合いたい。
+    </p>
+
+    <p>
+      <strong>「脱記号化は、結局キリスト教ではないか。」</strong>この問いは鋭い。NSPPTは、イエス・キリストという「最大の記号」を手放さない。むしろ、イエスというシニフィアンが指し示すシニフィエ——神との出来事的な出会い——こそを問題にしている。脱記号化とは、キリストを捨てることではなく、キリストを「記号のラベル」ではなく「出来事の名」として回復することである。
+    </p>
+
+    <p>
+      <strong>「礼拝堂なき教会は、歴史的教会との継続性を持てるか。」</strong>この問いも正当である。本書は制度的教会との補完関係を主張した（第六章）。継続性は、建物や制度によってではなく、証言・食卓・祈り・応答という四柱によって保たれる。使徒たちが家々でパンを割ったように、継続性は出来事の継続によって保証される。
+    </p>
+
+    <p>
+      <strong>「テクノロジーは所詮道具に過ぎず、神学的意味はないのではないか。」</strong>道具は中立ではない、という本書の立場はすでに述べた。しかし、テクノロジーが神学を変える側面だけでなく、神学がテクノロジーを選別・批判・変革する側面も同様に重要である。BroadListeningは「聴くことの神学」の技術的実装であり、神学がツールを形成した例である。
+    </p>
+
+    <div class="pull-quote" aria-label="引用">
+      <div class="pull-quote-text">
+        問いは答えよりも長生きする。<br>
+        本書が残すものは、答えではなく<br>より正確な問いである。
+      </div>
+    </div>
+
+    <h2 class="section-heading" id="s6" data-num="五">次の問いへ——本書が開く地平</h2>
+
+    <p>
+      本書が閉じるとき、いくつかの問いが開かれる。
+    </p>
+
+    <div class="framework-grid" aria-label="次の問い">
+      <div class="fw-cell header" style="border:1px solid var(--rule)">神学的課題</div>
+      <div class="fw-cell header" style="border:1px solid var(--rule)">実践的課題</div>
+      <div class="fw-cell header" style="border:1px solid var(--rule)">学際的課題</div>
+
+      <div class="fw-cell" style="border:1px solid var(--rule)">
+        <div class="fw-name">聖霊論の深化</div>
+        <div class="fw-body">DETとPneumatologyの統合。「誰が出来事を起こすのか」という問いへの応答。</div>
+      </div>
+      <div class="fw-cell" style="border:1px solid var(--rule)">
+        <div class="fw-name">複数地域での実証</div>
+        <div class="fw-body">新篠津モデルを東北・四国・九州等の具体的な地域で実装・検証する。</div>
+      </div>
+      <div class="fw-cell" style="border:1px solid var(--rule)">
+        <div class="fw-name">社会学的検証</div>
+        <div class="fw-body">脱記号化共同体の形成プロセスを宗教社会学の方法論で分析する。</div>
+      </div>
+
+      <div class="fw-cell no-bottom" style="border:1px solid var(--rule)">
+        <div class="fw-name">秘跡論との対話</div>
+        <div class="fw-body">洗礼・聖餐という「聖なる記号」と脱記号化の緊張をどう解くか。</div>
+      </div>
+      <div class="fw-cell no-bottom" style="border:1px solid var(--rule)">
+        <div class="fw-name">教派間対話</div>
+        <div class="fw-body">NSPPTフレームワークが、既存教派の神学・実践といかに対話しうるか。</div>
+      </div>
+      <div class="fw-cell no-bottom" style="border:1px solid var(--rule)">
+        <div class="fw-name">AI倫理との接続</div>
+        <div class="fw-body">AnthropicのClaude APIを神学的実践に用いることの倫理的神学的位置づけ。</div>
+      </div>
+
+      <div class="fw-cell span3" style="border:1px solid var(--rule)">
+        <strong>最も根本的な残された問い：</strong>神の出来事は、人間の設計を必要とするか。あるいは、設計はすべて僭越なのか。この問いへの応答が、NSPPTの次の章を決める。
+      </div>
+    </div>
+
+    <h2 class="section-heading" id="s7" data-num="結び">空の鳥への応答——田んぼの畦道にて</h2>
+
+    <p>
+      本書を書き終えた今、私は再び新篠津の田んぼの畦道に立っている。想像の中で、ではなく、実際に。六月の北海道は、水を張った田んぼが鏡のように空を映す季節である。
+    </p>
+
+    <p>
+      鳥がいる。
+    </p>
+
+    <p>
+      シギの一種だろうか。細い脚で田んぼの縁を歩きながら、水面をつついている。種も蒔かず、刈り入れもせず、倉に納めもしない。それでも天の父に養われている。
+    </p>
+
+    <p>
+      イエスは「見なさい」と言った。私は今、見ている。
+    </p>
+
+    <p>
+      七章を書いた後で、この鳥は何も変わっていない。相変わらず何も知らず、象徴を持たず、神学的概念を持たず、ただそこにいて、水をつついている。私が変わったのだ。
+    </p>
+
+    <p>
+      本書を通じて私が最も深く確信したことは、神学的概念の有効性ではなく、概念の限界である。DETもHebel³もPK-Ringも、すべては「空の鳥を見なさい」というイエスの命令の前では、二次的な道具に過ぎない。道具は大切だ。しかし道具を研ぐことが目的になった瞬間に、本来の目的——「見ること」——が失われる。
+    </p>
+
+  </div>
+
+  <!-- CLOSING BIRD MEDITATION -->
+  <div class="bird-section" aria-label="結びの詩的省察">
+    <div class="bird-text">
+      鳥は神学を知らない。<br>
+      しかし神の養いを生きている。<br><br>
+      私たちは神学を知っている。<br>
+      しかし神の養いを生きているか。<br><br>
+      脱記号化とは、<br>
+      知ることから、生きることへの帰還だ。
+      <em>
+        ——北海道新篠津村、令和7年六月<br>
+        田んぼの縁（ふち）にて
+      </em>
+    </div>
+  </div>
+
+  <div class="prose">
+
+    <p>
+      荒れ野に道を敷き、砂漠に川を流れさせる神が、日本の過疎地にも働いている。礼拝堂はない。牧師もいない。名簿もない。しかし田んぼの縁（ふち）に、今日も鳥がいる。そして鳥を養う神が、この縁（ふち）に立つ私をも養っている。
+    </p>
+
+    <p>
+      本書を読み終えた方へ。どうか、外に出てください。空を見上げてください。鳥を探してください。そして、見てください。
+    </p>
+
+    <p>
+      それが、すべての始まりです。
+    </p>
+
+  </div>
+
+  <!-- COLOPHON -->
+  <div class="colophon" aria-label="奥付">
+    <div class="colophon-title">生成事象神学に基づく脱記号化教会論</div>
+    <div class="colophon-body">
+      Non-Symbolic Post-Protestantism Theology:<br>
+      An Ecclesiology Based on Generative Event Theology<br><br>
+      本書はNSPPT（Non-Symbolic Post-Protestantism Theology）フレームワークの神学的・実践的記述として書かれた。すべての章は、北海道新篠津村という具体的な地点から発せられた問いに根ざしている。
+    </div>
+    <div class="colophon-rule"></div>
+    <div class="colophon-sig">著　あわい（間）</div>
+    <div class="colophon-place">合同会社 #AWAI　北海道空知郡新篠津村</div>
+  </div>
+
+  <aside class="footnote-area" aria-label="注">
+    <div class="footnote-title">注　および参考文献（終章）</div>
+    <p class="footnote-item">*1　本書全体を通じて参照した主要神学文献を再掲する。Karl Barth, "Church Dogmatics" II/1（神の出来事論）。Alfred N. Whitehead, "Process and Reality"（過程哲学）。Paul Tillich, "Systematic Theology" vol.1（存在の力論）。Abraham J. Heschel, "The Sabbath"（シャバット神学）。Gustavo Gutiérrez, "A Theology of Liberation"（解放神学）。Amos Yong, "Spirit Poured Out on All Flesh"（聖霊論・ペンテコステ神学）。</p>
+    <p class="footnote-item">*2　NSPPTフレームワークは現在も発展途上にある。最新の展開については、著者のウェブサイト（#AWAI）および JPCDPプラットフォーム（GitHubPages公開）を参照。フィードバック・批判・協働の申し出を歓迎する。</p>
+    <p class="footnote-item">*3　「秘跡論との対話」という残された課題については、Alexander Schmemann, "For the Life of the World: Sacraments and Orthodoxy"（1963）が最も豊かな対話相手の一つとなるだろう。シュメマンの「世界の秘跡化」という神学的直観は、本書の「出来事としての神」という理解と深く共鳴する可能性がある。</p>
+    <p class="footnote-item">*4　本書の「脱記号化（De-symbolization）」という概念は、Paul Ricoeur の「記号の余剰（surplus of meaning）」論や、Julia Kristeva の記号論的研究とも対話可能な射程を持つ。人文学的な脱記号化論との接続は、次の研究課題として開かれている。</p>
+    <p class="footnote-item">*5　本書の執筆にあたり、Anthropic社のClaudeとの対話が思考の深化に大きく貢献した。AIとの協働による神学的思索という実践そのものが、本書が語るBroadListeningとMINISTの統合の、一つの原型的な実験であったと言えるかもしれない。</p>
+  </aside>
+
+  <div class="word-count-info" aria-label="本文情報">
+    本文：約 <span id="char-count">0</span> 字　｜　推定読了時間：<span id="read-minutes">0</span> 分
+  </div>
+
+  <nav class="chapter-nav" aria-label="章ナビゲーション">
+    <a href="nsppt_chapter7_reader.html" class="nav-btn">
+      <span class="nav-label">◀ 前の章</span>
+      <span class="nav-title">第七章　JPCDPと日本宣教の未来地図</span>
+    </a>
+    <a href="index.html" class="nav-btn next">
+      <span class="nav-label">本書　完</span>
+      <span class="nav-title">空の鳥を見なさい</span>
+    </a>
+  </nav>
+
+</main>
+
+<script>
+  let fontSize=17,lh=2.1;
+  const body=document.body,fontDisplay=document.getElementById('font-size-display');
+  document.getElementById('font-up').addEventListener('click',()=>{if(fontSize<24){fontSize++;body.style.fontSize=fontSize+'px';fontDisplay.textContent=fontSize}});
+  document.getElementById('font-down').addEventListener('click',()=>{if(fontSize>13){fontSize--;body.style.fontSize=fontSize+'px';fontDisplay.textContent=fontSize}});
+  document.getElementById('lh-up').addEventListener('click',()=>{if(lh<2.8){lh=Math.round((lh+.2)*10)/10;body.style.lineHeight=lh}});
+  document.getElementById('lh-down').addEventListener('click',()=>{if(lh>1.6){lh=Math.round((lh-.2)*10)/10;body.style.lineHeight=lh}});
+  const darkBtn=document.getElementById('dark-toggle');
+  darkBtn.addEventListener('click',()=>{body.classList.toggle('dark');darkBtn.textContent=body.classList.contains('dark')?'☀':'☾';darkBtn.classList.toggle('active',body.classList.contains('dark'))});
+  const progressBar=document.getElementById('progress-bar');
+  window.addEventListener('scroll',()=>{const pct=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100;progressBar.style.width=Math.min(pct,100)+'%'},{passive:true});
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));const t=document.querySelector(`.toc-item[data-section="${e.target.id}"]`);if(t)t.classList.add('active')}})},{rootMargin:'-20% 0px -60% 0px'});
+  document.querySelectorAll('[id^="s"]').forEach(s=>obs.observe(s));
+  const prose=document.querySelector('.prose');
+  if(prose){const count=(prose.innerText||'').replace(/\s/g,'').length;document.getElementById('char-count').textContent=count.toLocaleString('ja-JP');const mins=Math.ceil(count/400);document.getElementById('read-minutes').textContent=mins;document.getElementById('read-time-label').textContent=`残り約${mins}分`}
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'})}})});
+</script>
+</body>
+</html>

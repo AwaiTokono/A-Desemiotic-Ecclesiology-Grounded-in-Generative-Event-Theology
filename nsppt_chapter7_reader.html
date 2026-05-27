@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JPCDPと日本宣教の未来地図｜第7章｜脱記号化教会論</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500&family=Shippori+Antique+B1&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f1ea;
+    --bg-warm: #ece7db;
+    --paper: #f9f6ef;
+    --ink: #1c1810;
+    --ink-soft: #362e20;
+    --ink-muted: #74685a;
+    --accent: #1e3a6e;
+    --accent-light: #3a64b0;
+    --accent-mid: #2a7a9a;
+    --accent-warm: #a04820;
+    --rule: #c8bfae;
+    --highlight: #e4dcd0;
+    --font-base: 17px;
+    --line-height: 2.1;
+    --chapter-width: 700px;
+    --side-pad: clamp(24px, 8vw, 120px);
+  }
+  body.dark {
+    --bg: #100e0a;
+    --bg-warm: #1a1812;
+    --paper: #201c16;
+    --ink: #e8e0d0;
+    --ink-soft: #c4baa8;
+    --ink-muted: #78685a;
+    --accent: #4a78c8;
+    --accent-light: #6a98e8;
+    --accent-mid: #3aa0c0;
+    --accent-warm: #d07040;
+    --rule: #3a3020;
+    --highlight: #2a2418;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Shippori Mincho','Noto Serif JP',serif;font-size:var(--font-base);line-height:var(--line-height);-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+
+  #toolbar{position:fixed;top:0;left:0;right:0;height:52px;background:var(--paper);border-bottom:1px solid var(--rule);display:flex;align-items:center;padding:0 20px;gap:10px;z-index:100;transition:background .3s,border-color .3s}
+  .tool-label{font-size:11px;color:var(--ink-muted);letter-spacing:.08em;font-family:'JetBrains Mono',monospace;user-select:none;white-space:nowrap}
+  .tool-btn{background:var(--bg-warm);border:1px solid var(--rule);color:var(--ink-soft);padding:5px 12px;font-family:inherit;font-size:13px;cursor:pointer;border-radius:3px;transition:all .15s;min-height:32px;min-width:32px;white-space:nowrap}
+  .tool-btn:hover{background:var(--highlight);color:var(--ink)}
+  .tool-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .tool-sep{width:1px;height:24px;background:var(--rule);margin:0 2px}
+  .tool-spacer{flex:1}
+  #font-size-display{font-size:12px;color:var(--ink-muted);min-width:26px;text-align:center}
+  #progress-bar{position:fixed;top:52px;left:0;height:2px;background:var(--accent-light);width:0%;transition:width .1s linear;z-index:99}
+
+  #main{max-width:var(--chapter-width);margin:0 auto;padding:96px var(--side-pad) 120px}
+
+  .book-meta{display:flex;align-items:center;gap:12px;margin-bottom:52px;padding-bottom:24px;border-bottom:1px solid var(--rule)}
+  .book-meta-chapter{font-size:11px;letter-spacing:.15em;font-family:'JetBrains Mono',monospace;color:var(--ink-muted)}
+  .book-meta-sep{color:var(--rule)}
+  .book-meta-title{font-size:12px;color:var(--ink-muted);font-weight:400}
+
+  .chapter-header{margin-bottom:60px}
+  .chapter-number{font-size:11px;letter-spacing:.2em;font-family:'JetBrains Mono',monospace;color:var(--accent-light);margin-bottom:20px;display:block}
+  .chapter-title{font-family:'Shippori Antique B1','Shippori Mincho',serif;font-size:clamp(24px,5vw,36px);font-weight:400;line-height:1.45;color:var(--ink);letter-spacing:.06em;margin-bottom:24px}
+  .chapter-subtitle{font-size:15px;color:var(--ink-muted);font-weight:400;letter-spacing:.04em;border-left:2px solid var(--accent-light);padding-left:16px;line-height:1.7}
+
+  .scripture{background:var(--bg-warm);border-left:3px solid var(--accent);padding:26px 30px;margin:48px 0;border-radius:0 4px 4px 0;position:relative}
+  .scripture::before{content:'✦';position:absolute;top:18px;right:18px;color:var(--accent);opacity:.2;font-size:16px}
+  .scripture-text{font-size:1.03em;line-height:2.0;color:var(--ink-soft);font-style:italic;margin-bottom:10px}
+  .scripture-ref{font-size:.84em;color:var(--ink-muted);letter-spacing:.06em}
+
+  .prose p{margin-bottom:1.6em;text-align:justify;text-justify:inter-ideograph;hanging-punctuation:first last;word-break:break-all;overflow-wrap:break-word}
+  .prose p.lead{font-size:1.07em;color:var(--ink-soft);line-height:2.2;margin-bottom:2em}
+
+  .section-heading{font-family:'Shippori Antique B1','Shippori Mincho',serif;font-size:1.2em;font-weight:400;color:var(--ink);letter-spacing:.08em;margin:64px 0 28px;padding-bottom:12px;border-bottom:1px solid var(--rule);display:flex;align-items:baseline;gap:12px}
+  .section-heading::before{content:attr(data-num);font-size:.7em;color:var(--accent-light);letter-spacing:.1em;font-family:'Shippori Mincho',serif;min-width:28px}
+
+  .concept-box{border:1px solid var(--rule);padding:26px 30px;margin:44px 0;background:var(--paper);position:relative}
+  .concept-box-label{position:absolute;top:-10px;left:18px;background:var(--paper);padding:0 8px;font-size:11px;letter-spacing:.12em;color:var(--accent-light)}
+  .concept-box-title{font-size:1.08em;font-weight:600;margin-bottom:12px;color:var(--ink);letter-spacing:.06em}
+  .concept-box p{font-size:.92em;color:var(--ink-soft);line-height:2.0;margin-bottom:.8em}
+  .concept-box p:last-child{margin-bottom:0}
+
+  .pull-quote{margin:52px 0;text-align:center}
+  .pull-quote-text{font-family:'Shippori Antique B1','Shippori Mincho',serif;font-size:clamp(16px,3vw,21px);color:var(--ink-soft);line-height:1.95;letter-spacing:.08em;padding:0 24px;display:inline-block}
+  .pull-quote-text::before,.pull-quote-text::after{content:'';display:block;width:40px;height:1px;background:var(--accent-light);margin:14px auto}
+
+  /* JPCDP DATA PANEL */
+  .data-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:44px 0;border:1px solid var(--rule);overflow:hidden}
+  .data-grid-header{grid-column:1/-1;background:var(--bg-warm);padding:12px 20px;font-size:11px;letter-spacing:.14em;color:var(--ink-muted);border-bottom:1px solid var(--rule)}
+  .data-cell{padding:22px 18px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+  .data-cell:nth-child(3n+1){border-right:1px solid var(--rule)}
+  .data-cell:nth-child(3n){border-right:none}
+  .data-cell.no-bottom{border-bottom:none}
+  .data-val{font-family:'Shippori Antique B1','Shippori Mincho',serif;font-size:clamp(22px,4vw,30px);color:var(--accent);line-height:1.2;margin-bottom:5px}
+  .data-val.warn{color:var(--accent-warm)}
+  .data-val.mid{color:var(--accent-mid)}
+  .data-label{font-size:11px;color:var(--ink-muted);line-height:1.6;letter-spacing:.04em}
+  .data-note{font-size:10px;color:var(--ink-muted);margin-top:4px;opacity:.7}
+
+  /* REGIONAL MAP TABLE */
+  .region-table{width:100%;border-collapse:collapse;margin:44px 0;font-size:.88em}
+  .region-table th{background:var(--bg-warm);border:1px solid var(--rule);padding:10px 12px;text-align:center;font-weight:600;color:var(--ink-soft);letter-spacing:.06em;font-size:.92em}
+  .region-table th.accent{background:var(--highlight);color:var(--accent)}
+  .region-table td{border:1px solid var(--rule);padding:10px 12px;line-height:1.8;color:var(--ink-soft);vertical-align:top}
+  .region-table td.accent{background:var(--highlight);color:var(--ink)}
+  .region-table td.center{text-align:center}
+  .region-table tr:hover td{background:var(--highlight)}
+  .badge{display:inline-block;font-size:9px;padding:1px 6px;border-radius:2px;margin-left:4px;letter-spacing:.04em}
+  .badge-red{background:var(--accent-warm);color:#fff}
+  .badge-blue{background:var(--accent-light);color:#fff}
+  .badge-teal{background:var(--accent-mid);color:#fff}
+
+  /* PHASE TIMELINE */
+  .timeline{margin:48px 0;border:1px solid var(--rule);overflow:hidden}
+  .timeline-header{background:var(--bg-warm);padding:12px 20px;font-size:11px;letter-spacing:.14em;color:var(--ink-muted);border-bottom:1px solid var(--rule)}
+  .timeline-phases{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  .tl-phase{padding:24px 20px;border-right:1px solid var(--rule)}
+  .tl-phase:last-child{border-right:none}
+  .tl-phase-label{font-size:10px;letter-spacing:.15em;color:var(--accent-light);margin-bottom:6px}
+  .tl-phase-period{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:10px;letter-spacing:.04em;padding-bottom:8px;border-bottom:1px solid var(--rule)}
+  .tl-phase-name{font-family:'Shippori Antique B1','Shippori Mincho',serif;font-size:15px;color:var(--accent);margin-bottom:10px}
+  .tl-items{list-style:none;display:flex;flex-direction:column;gap:6px}
+  .tl-item{font-size:.86em;color:var(--ink-soft);line-height:1.7;padding-left:14px;position:relative}
+  .tl-item::before{content:'›';position:absolute;left:0;color:var(--accent-light)}
+
+  /* MSI RADAR PLACEHOLDER */
+  .msi-panel{margin:44px 0;border:1px solid var(--rule);overflow:hidden;background:var(--paper)}
+  .msi-header{background:var(--bg-warm);padding:12px 20px;font-size:11px;letter-spacing:.14em;color:var(--ink-muted);border-bottom:1px solid var(--rule)}
+  .msi-body{padding:28px 24px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+  .msi-radar{width:100%;aspect-ratio:1;position:relative}
+  .msi-radar svg{width:100%;height:100%}
+  .msi-legend{display:flex;flex-direction:column;gap:10px}
+  .msi-item{display:flex;align-items:flex-start;gap:10px}
+  .msi-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px}
+  .msi-item-label{font-size:12px;font-weight:600;color:var(--ink);letter-spacing:.04em;margin-bottom:2px}
+  .msi-item-desc{font-size:.82em;color:var(--ink-muted);line-height:1.6}
+
+  /* SCENARIO CARDS */
+  .scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:44px 0}
+  .scenario-card{border:1px solid var(--rule);padding:22px 20px;background:var(--paper);position:relative;overflow:hidden}
+  .scenario-card.primary{border-color:var(--accent);background:var(--highlight)}
+  .scenario-card::after{content:attr(data-letter);position:absolute;right:-6px;bottom:-14px;font-family:'Shippori Antique B1',serif;font-size:80px;color:var(--accent);opacity:.06;line-height:1;pointer-events:none}
+  .scenario-label{font-size:10px;letter-spacing:.15em;color:var(--ink-muted);margin-bottom:6px}
+  .scenario-label.primary-label{color:var(--accent)}
+  .scenario-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:10px;letter-spacing:.04em}
+  .scenario-body{font-size:.88em;color:var(--ink-soft);line-height:1.9}
+
+  /* INTERVENTION MAP */
+  .intervention-list{margin:44px 0;border:1px solid var(--rule);overflow:hidden}
+  .intervention-header{background:var(--bg-warm);padding:12px 20px;font-size:11px;letter-spacing:.14em;color:var(--ink-muted);border-bottom:1px solid var(--rule)}
+  .intervention-item{display:grid;grid-template-columns:140px 1fr auto;gap:16px;align-items:start;padding:18px 20px;border-bottom:1px solid var(--rule)}
+  .intervention-item:last-child{border-bottom:none}
+  .intervention-item:hover{background:var(--highlight)}
+  .intv-region{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.04em}
+  .intv-challenge{font-size:.88em;color:var(--ink-soft);line-height:1.8}
+  .intv-tool{font-size:10px;color:var(--ink-muted);text-align:right;padding-top:2px;white-space:nowrap}
+
+  .footnote-area{margin-top:80px;padding-top:32px;border-top:1px solid var(--rule)}
+  .footnote-title{font-size:11px;letter-spacing:.15em;color:var(--ink-muted);margin-bottom:20px}
+  .footnote-item{font-size:.84em;color:var(--ink-muted);line-height:1.8;margin-bottom:10px;padding-left:24px;text-indent:-24px}
+
+  .chapter-nav{display:flex;justify-content:space-between;align-items:stretch;margin-top:96px;padding-top:32px;border-top:1px solid var(--rule);gap:16px}
+  .nav-btn{display:flex;flex-direction:column;gap:4px;text-decoration:none;color:inherit;padding:16px;border:1px solid var(--rule);border-radius:4px;min-width:160px;background:var(--paper);transition:all .2s;flex:1}
+  .nav-btn:hover{background:var(--highlight);border-color:var(--accent-light)}
+  .nav-btn.disabled{opacity:.25;pointer-events:none}
+  .nav-label{font-size:10px;letter-spacing:.15em;color:var(--ink-muted)}
+  .nav-title{font-size:13px;color:var(--ink-soft);line-height:1.5}
+  .nav-btn.next{text-align:right}
+  .word-count-info{text-align:center;font-size:11px;color:var(--ink-muted);margin-top:32px;letter-spacing:.08em}
+
+  #toc{position:fixed;left:24px;top:80px;width:180px;display:none;flex-direction:column;gap:6px}
+  @media(min-width:1200px){#toc{display:flex}}
+  .toc-item{font-size:11px;color:var(--ink-muted);line-height:1.6;padding:4px 8px;border-left:2px solid transparent;cursor:pointer;transition:all .2s;text-decoration:none;display:block}
+  .toc-item:hover{color:var(--ink);border-left-color:var(--rule)}
+  .toc-item.active{color:var(--accent-light);border-left-color:var(--accent-light)}
+  .toc-header{font-size:10px;letter-spacing:.15em;color:var(--ink-muted);margin-bottom:8px;padding-left:10px;opacity:.6}
+
+  ruby rt{font-size:.5em}
+  ::selection{background:var(--accent);color:#fff}
+  :focus-visible{outline:2px solid var(--accent-light);outline-offset:2px;border-radius:2px}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  #main>*{animation:fadeUp .55s ease both}
+  .book-meta{animation-delay:.05s}
+  .chapter-header{animation-delay:.12s}
+  .prose{animation-delay:.22s}
+
+  @media(max-width:600px){
+    #main{padding:80px 18px 80px}
+    .scripture,.concept-box{padding:20px 18px}
+    .chapter-nav{flex-direction:column}
+    .nav-btn.next{text-align:left}
+    .data-grid{grid-template-columns:1fr 1fr}
+    .data-cell:nth-child(2n){border-right:none}
+    .timeline-phases{grid-template-columns:1fr}
+    .tl-phase{border-right:none;border-bottom:1px solid var(--rule)}
+    .tl-phase:last-child{border-bottom:none}
+    .scenario-grid{grid-template-columns:1fr}
+    .msi-body{grid-template-columns:1fr}
+    .intervention-item{grid-template-columns:1fr;gap:6px}
+    .intv-tool{text-align:left}
+  }
+  @media print{#toolbar,#toc,#progress-bar{display:none}#main{padding-top:32px}.chapter-nav{display:none}}
+</style>
+</head>
+<body>
+
+<div id="toolbar" role="toolbar" aria-label="読書設定">
+  <span class="tool-label">文字</span>
+  <button class="tool-btn" id="font-down" aria-label="文字を小さく">A−</button>
+  <span id="font-size-display">17</span>
+  <button class="tool-btn" id="font-up" aria-label="文字を大きく">A＋</button>
+  <div class="tool-sep"></div>
+  <span class="tool-label">行間</span>
+  <button class="tool-btn" id="lh-down">≡</button>
+  <button class="tool-btn" id="lh-up">≡ ≡</button>
+  <div class="tool-sep"></div>
+  <button class="tool-btn" id="dark-toggle" aria-label="ダーク/ライト切替">☾</button>
+  <div class="tool-spacer"></div>
+  <span class="tool-label" id="read-time-label"></span>
+  <div class="tool-sep"></div>
+  <button class="tool-btn" onclick="window.print()" aria-label="印刷">⎙</button>
+</div>
+<div id="progress-bar" role="progressbar" aria-label="読書進捗"></div>
+
+<nav id="toc" aria-label="節目次">
+  <div class="toc-header">目次</div>
+  <a href="#s1" class="toc-item" data-section="s1">序　地図を読む</a>
+  <a href="#s2" class="toc-item" data-section="s2">一　JPCDPとは何か</a>
+  <a href="#s3" class="toc-item" data-section="s3">二　データが語る現実</a>
+  <a href="#s4" class="toc-item" data-section="s4">三　地域別の神学的読解</a>
+  <a href="#s5" class="toc-item" data-section="s5">四　MSIブレンド指標</a>
+  <a href="#s6" class="toc-item" data-section="s6">五　三つのシナリオ</a>
+  <a href="#s7" class="toc-item" data-section="s7">六　介入の地図</a>
+  <a href="#s8" class="toc-item" data-section="s8">七　三段階の実装計画</a>
+  <a href="#s9" class="toc-item" data-section="s9">結び　地図の外へ</a>
+</nav>
+
+<main id="main">
+
+  <div class="book-meta" aria-label="書誌情報">
+    <span class="book-meta-chapter">第七章</span>
+    <span class="book-meta-sep">｜</span>
+    <span class="book-meta-title">生成事象神学に基づく脱記号化教会論</span>
+  </div>
+
+  <header class="chapter-header">
+    <span class="chapter-number">CHAPTER 07</span>
+    <h1 class="chapter-title">JPCDPと日本宣教の未来地図</h1>
+    <p class="chapter-subtitle">
+      データの神学的読解——日本全国の「礼拝堂なき可能性」を可視化する
+    </p>
+  </header>
+
+  <blockquote class="scripture" aria-label="聖書箇所">
+    <p class="scripture-text">
+      見よ、わたしは新しいことを行う。今や、それは芽生えている。<br>
+      あなたがたはそれを認めないのか。わたしは荒れ野に道を敷き、<br>
+      砂漠に川を流れさせる。
+    </p>
+    <footer class="scripture-ref">イザヤ書 43:19（新共同訳）</footer>
+  </blockquote>
+
+  <div class="prose">
+
+    <p class="lead" id="s1">
+      地図は現実を写すが、現実のすべてを写しはしない。地図に描かれた教会の点は、礼拝堂のある場所を示す。しかしそれは同時に、礼拝堂のない場所——地図の白地——を際立たせる。日本のプロテスタント教会地図は、圧倒的な白地によって占められている。しかしその白地は、「神の不在」を意味するのか。それとも「神の出来事の、まだ記録されていない場所」を意味するのか。
+    </p>
+
+    <p>
+      JPCDP（Japan Protestant Church Digital Platform）は、この問いに応えるために構築されたデータプラットフォームである。日本全国のプロテスタント教会の地理的分布・人的資源・財政構造・MSIブレンド指標を可視化し、宣教の「現在地と可能性」を神学的に読み解くための道具として設計されている。
+    </p>
+
+    <p>
+      本章では、JPCDPが集積したデータを神学的に読解し、日本宣教の未来地図を描く。数字は冷たくない。それは、神の出来事が起きた場所・起きつつある場所・起きていない場所の、現在の地形図である。
+    </p>
+
+    <h2 class="section-heading" id="s2" data-num="一">JPCDPとは何か——プラットフォームの設計思想</h2>
+
+    <p>
+      JPCDPは、単なるデータベースではない。それは、日本全国に散在するプロテスタント教会の「見えない構造」を可視化するための、神学的・技術的なインフラである。
+    </p>
+
+    <p>
+      設計の出発点は、一つの認識である——日本のプロテスタント宣教は、個別の教会・教派が孤立したまま衰退の問題に向き合っており、全体像を把握した上での戦略的協力が著しく欠けている、という認識。JPCDPはこの孤立を、データの共有と可視化によって「PK-Ringで繋ぐ」試みである。
+    </p>
+
+    <div class="concept-box" aria-label="概念説明">
+      <span class="concept-box-label">KEY CONCEPT</span>
+      <div class="concept-box-title">JPCDPの三層設計</div>
+      <p>
+        <strong>第一層：データ収集</strong>——全国のプロテスタント教会の地理・信徒数・財政・牧師配置・教派別分布を収集・標準化。Supabaseによるリアルタイムデータ管理。
+      </p>
+      <p>
+        <strong>第二層：可視化エンジン</strong>——Chart.js・SVGによる地域別・教派別・時系列のダッシュボード表示。MSIブレンドレーダーチャートによる多次元評価。GitHubPages + Vercelによるオープンアクセス展開。
+      </p>
+      <p>
+        <strong>第三層：BroadListening統合</strong>——教会関係者の声・課題・祈りをSupabase経由で収集し、Anthropic APIによるリアルタイム分析を行う。データと証言を同一プラットフォームで統合する試み。
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="s3" data-num="二">データが語る現実——日本プロテスタントの現在地</h2>
+
+    <p>
+      JPCDPが可視化する日本プロテスタントの現状は、厳しい。しかし厳しい現実を直視することは、神学的勇気の要件である。イザヤが「荒れ野」と呼んだ現実の中にこそ、「新しいことを行う」神の働きが起きるのだから。
+    </p>
+
+    <div class="data-grid" aria-label="日本プロテスタント基礎データ">
+      <div class="data-grid-header">日本プロテスタント教会　現状統計（JPCDP集計、令和7年度）</div>
+      <div class="data-cell">
+        <div class="data-val">約7,700</div>
+        <div class="data-label">全国プロテスタント教会数</div>
+        <div class="data-note">カトリック含む総キリスト教会の約65%</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-val warn">約30万</div>
+        <div class="data-label">推定プロテスタント信徒数</div>
+        <div class="data-note">全人口比 約0.24%</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-val warn">39人</div>
+        <div class="data-label">平均礼拝出席者数</div>
+        <div class="data-note">10年前比 約22%減</div>
+      </div>
+      <div class="data-cell no-bottom">
+        <div class="data-val mid">62歳</div>
+        <div class="data-label">信徒の平均年齢（推計）</div>
+        <div class="data-note">20代以下の比率は約4%</div>
+      </div>
+      <div class="data-cell no-bottom">
+        <div class="data-val warn">約43%</div>
+        <div class="data-label">牧師不在または兼任教会率</div>
+        <div class="data-note">専任牧師のいる教会は過半を割る</div>
+      </div>
+      <div class="data-cell no-bottom">
+        <div class="data-val mid">約1,200</div>
+        <div class="data-label">礼拝出席者10人以下の教会数</div>
+        <div class="data-note">全体の約16%が超小規模</div>
+      </div>
+    </div>
+
+    <p>
+      これらの数字は、制度的教会の臨界を示している。しかし生成事象神学の視点から読み直すとき、別の問いが浮かぶ。礼拝出席者39人は「少ない」のか、それとも「39人の間で出来事が起きている」と読むべきか。信徒比率0.24%は「敗北」なのか、それとも「99.76%の人々への縁（ふち）がまだ耕されていない」と読むべきか。
+    </p>
+
+    <div class="pull-quote" aria-label="引用">
+      <div class="pull-quote-text">
+        データは現実の鏡だ。<br>
+        しかし鏡は、映っていないものも教える。
+      </div>
+    </div>
+
+    <h2 class="section-heading" id="s4" data-num="三">地域別の神学的読解——九地方ブロックの現状と可能性</h2>
+
+    <p>
+      日本を九地方ブロックに分けてJPCDPのデータを読むとき、「衰退」と「可能性」が地域によって異なる形で現れることが見えてくる。
+    </p>
+
+    <div class="region-table" role="table" aria-label="九地方ブロック別の現状と神学的可能性">
+      <thead>
+        <tr>
+          <th>地方</th>
+          <th>教会密度</th>
+          <th>主な課題</th>
+          <th class="accent">神学的可能性</th>
+          <th class="accent">推奨介入</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>北海道</strong><span class="badge badge-red">過疎</span></td>
+          <td class="center">低</td>
+          <td>広大な地理的散在・過疎化・冬季孤立</td>
+          <td class="accent">農村共同体文化・星空・光ファイバー網<br>新篠津モデルの横展開</td>
+          <td class="accent">BroadListening<br>辺縁→中心型宣教</td>
+        </tr>
+        <tr>
+          <td><strong>東北</strong><span class="badge badge-red">震災</span></td>
+          <td class="center">低</td>
+          <td>東日本大震災の傷・人口流出・高齢化</td>
+          <td class="accent">苦難の神学の深さ・復興共同体の絆<br>「荒れ野に道」の現場</td>
+          <td class="accent">MINIST記録<br>証言アーカイブ</td>
+        </tr>
+        <tr>
+          <td><strong>関東</strong><span class="badge badge-blue">都市</span></td>
+          <td class="center">高</td>
+          <td>匿名性・孤立・超過密と超孤独の共存</td>
+          <td class="accent">デジタル接続性・多様な縁（ふち）の重層<br>教会密度の高さを資源に</td>
+          <td class="accent">三リング間<br>ネットワーク化</td>
+        </tr>
+        <tr>
+          <td><strong>中部</strong><span class="badge badge-blue">産業</span></td>
+          <td class="center">中</td>
+          <td>製造業中心の文化・外国籍労働者増加</td>
+          <td class="accent">多言語共同体の可能性<br>水平型宣教の実験場</td>
+          <td class="accent">多言語UD設計<br>外国籍住民連携</td>
+        </tr>
+        <tr>
+          <td><strong>近畿</strong><span class="badge badge-blue">歴史</span></td>
+          <td class="center">中高</td>
+          <td>仏教・神道文化の厚さ・宗教的免疫</td>
+          <td class="accent">宗教間対話の伝統・知的霊性の土壌<br>脱記号化の語彙が響く地盤</td>
+          <td class="accent">神学的対話<br>文化的縁（ふち）形成</td>
+        </tr>
+        <tr>
+          <td><strong>中国</strong><span class="badge badge-red">過疎</span></td>
+          <td class="center">低</td>
+          <td>山間地の過疎化・教会の高齢化・閉鎖</td>
+          <td class="accent">山陰の静寂・農漁村の共同体文化<br>辺縁からの証言の素材</td>
+          <td class="accent">DAO型共同体<br>遠隔PK-Ring</td>
+        </tr>
+        <tr>
+          <td><strong>四国</strong><span class="badge badge-teal">巡礼</span></td>
+          <td class="center">低</td>
+          <td>四国八十八カ所巡礼文化・人口最少</td>
+          <td class="accent">巡礼霊性との対話・余白の文化的土台<br>シャバット神学の親和性</td>
+          <td class="accent">霊的旅の神学<br>余白の設計</td>
+        </tr>
+        <tr>
+          <td><strong>九州</strong><span class="badge badge-teal">歴史</span></td>
+          <td class="center">中</td>
+          <td>潜伏キリシタンの歴史的遺産・南北格差</td>
+          <td class="accent">殉教と存続の神学的記憶<br>脱記号化の歴史的原型がここにある</td>
+          <td class="accent">証言アーカイブ<br>歴史神学の宣教化</td>
+        </tr>
+        <tr>
+          <td><strong>沖縄</strong><span class="badge badge-teal">独自</span></td>
+          <td class="center">中</td>
+          <td>米軍基地問題・独自の霊性文化（ユタ等）</td>
+          <td class="accent">先住文化的霊性との対話<br>辺縁からの平和神学</td>
+          <td class="accent">文化的対話<br>平和の縁（ふち）形成</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      この地図を読むとき、最も注目すべきは、宣教的「白地」——教会密度の低い地域——が神学的な意味で最も豊かな可能性を持つ場合があることである。九州の潜伏キリシタンの歴史、四国遍路の巡礼霊性、北海道の過疎地に宿る相互扶助の文化——これらはすべて、脱記号化教会論と深く共鳴する土壌を持っている。
+    </p>
+
+    <h2 class="section-heading" id="s5" data-num="四">MSIブレンド指標——宣教状況の多次元評価</h2>
+
+    <p>
+      JPCDPが採用するMSIブレンド（Mission Status Index Blend）は、ある地域の宣教状況を多次元的に評価するための複合指標である。単一の「教会数」や「信徒数」ではなく、六つの軸での評価を統合することで、より立体的な現実把握を可能にする。
+    </p>
+
+    <div class="msi-panel" aria-label="MSIブレンド指標の説明">
+      <div class="msi-header">MSIブレンド　六軸評価レーダー（概念図）</div>
+      <div class="msi-body">
+        <div class="msi-radar" aria-label="レーダーチャート">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <style>
+                .radar-grid{fill:none;stroke:var(--rule);stroke-width:.8}
+                .radar-axis{stroke:var(--rule);stroke-width:.8}
+                .radar-area{fill:var(--accent);fill-opacity:.18;stroke:var(--accent-light);stroke-width:1.5}
+                .radar-label{font-family:'Shippori Mincho',serif;font-size:9px;fill:var(--ink-muted);text-anchor:middle}
+              </style>
+            </defs>
+            <!-- grid circles -->
+            <circle class="radar-grid" cx="100" cy="100" r="72"/>
+            <circle class="radar-grid" cx="100" cy="100" r="54"/>
+            <circle class="radar-grid" cx="100" cy="100" r="36"/>
+            <circle class="radar-grid" cx="100" cy="100" r="18"/>
+            <!-- axes (6) -->
+            <line class="radar-axis" x1="100" y1="100" x2="100" y2="28"/>
+            <line class="radar-axis" x1="100" y1="100" x2="162" y2="64"/>
+            <line class="radar-axis" x1="100" y1="100" x2="162" y2="136"/>
+            <line class="radar-axis" x1="100" y1="100" x2="100" y2="172"/>
+            <line class="radar-axis" x1="100" y1="100" x2="38" y2="136"/>
+            <line class="radar-axis" x1="100" y1="100" x2="38" y2="64"/>
+            <!-- data polygon (sample: 制度密度低、デジタル高、文化高、深み中、共助高、記録低) -->
+            <!-- 各軸の値を0-72の長さで表現: 制度12, デジタル64, 文化54, 深み40, 共助58, 記録22 -->
+            <polygon class="radar-area"
+              points="
+                100,88
+                155,68
+                154,126
+                100,148
+                50,128
+                50,76
+              "/>
+            <!-- labels -->
+            <text class="radar-label" x="100" y="22">制度的密度</text>
+            <text class="radar-label" x="170" y="62">デジタル接続</text>
+            <text class="radar-label" x="170" y="144">文化的親和性</text>
+            <text class="radar-label" x="100" y="184">人生の深み</text>
+            <text class="radar-label" x="30" y="144">相互扶助</text>
+            <text class="radar-label" x="30" y="62">記録・証言基盤</text>
+          </svg>
+        </div>
+        <div class="msi-legend">
+          <div class="msi-item">
+            <div class="msi-dot" style="background:var(--accent-warm)"></div>
+            <div>
+              <div class="msi-item-label">制度的密度</div>
+              <div class="msi-item-desc">教会数・信徒数・牧師配置の充実度</div>
+            </div>
+          </div>
+          <div class="msi-item">
+            <div class="msi-dot" style="background:var(--accent-mid)"></div>
+            <div>
+              <div class="msi-item-label">デジタル接続性</div>
+              <div class="msi-item-desc">光ファイバー・スマートフォン普及率・SNS活用</div>
+            </div>
+          </div>
+          <div class="msi-item">
+            <div class="msi-dot" style="background:var(--accent-light)"></div>
+            <div>
+              <div class="msi-item-label">文化的親和性</div>
+              <div class="msi-item-desc">地域霊性・祭り・共同体文化との接触可能性</div>
+            </div>
+          </div>
+          <div class="msi-item">
+            <div class="msi-dot" style="background:var(--accent)"></div>
+            <div>
+              <div class="msi-item-label">人生の深みへの近接</div>
+              <div class="msi-item-desc">高齢化・苦難の経験・死との近さ</div>
+            </div>
+          </div>
+          <div class="msi-item">
+            <div class="msi-dot" style="background:var(--accent-green, #3a8a3a)"></div>
+            <div>
+              <div class="msi-item-label">相互扶助の豊かさ</div>
+              <div class="msi-item-desc">農業共同体・自治会・隣組等のネットワーク</div>
+            </div>
+          </div>
+          <div class="msi-item">
+            <div class="msi-dot" style="background:var(--rule)"></div>
+            <div>
+              <div class="msi-item-label">記録・証言基盤</div>
+              <div class="msi-item-desc">出来事の記録・共有・循環の仕組みの整備度</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      MSIブレンドで注目すべきは、「制度的密度」が低い地域でも、他の五軸が豊かな地域が多いことである。北海道・四国・東北の農村部は、制度的密度は低いが、相互扶助・人生の深み・文化的親和性において高い評価を得る。これらは、脱記号化教会論が「Dynamis の豊かな土壌」と呼ぶ状態に近い。欠けているのは「記録・証言基盤」——PK-Ringを機能させるインフラである。
+    </p>
+
+    <h2 class="section-heading" id="s6" data-num="五">三つのシナリオ——日本宣教の未来分岐</h2>
+
+    <p>
+      現在のデータを踏まえて、日本プロテスタント宣教の向こう二十年について、三つのシナリオを提示する。これは予測ではなく、現在の選択によって分岐しうる可能性の地図である。
+    </p>
+
+    <div class="scenario-grid" aria-label="三つのシナリオ">
+      <div class="scenario-card" data-letter="A">
+        <div class="scenario-label">SCENARIO A</div>
+        <div class="scenario-title">制度的縮小の継続</div>
+        <div class="scenario-body">現在の傾向が継続し、教会数・信徒数ともに年率2〜3%の減少が続く。2045年には現在の半数以下の教会が残存。地方都市・農村からの撤退が加速し、教会は大都市圏に集中する「都市教会化」が進む。制度的記号は維持されるが、出来事から乖離した「宗教文化財化」が進む。</div>
+      </div>
+      <div class="scenario-card primary" data-letter="B">
+        <div class="scenario-label primary-label">SCENARIO B（推奨）</div>
+        <div class="scenario-title">脱記号化的再構成</div>
+        <div class="scenario-body">制度的教会の縮小を受け入れつつ、脱記号化共同体の並走的展開を進める。礼拝堂なき共同体が農村・過疎地に根を張り、制度的教会と補完関係を形成。BroadListeningとMINISTの統合により、神の出来事が可視化・循環し始める。2045年には「教会の外の共同体」が宣教の主力担い手となる。</div>
+      </div>
+      <div class="scenario-card" data-letter="C">
+        <div class="scenario-label">SCENARIO C</div>
+        <div class="scenario-title">デジタル宣教への全面移行</div>
+        <div class="scenario-body">オンライン礼拝・SNS伝道・AI牧会の全面展開により、制度的な「場所」を廃棄してデジタル空間に移行する。技術的には実行可能だが、食卓・身体的な出会い・地域への根づきを失うリスクが大きい。デジタル空間は縁（ふち）を提供しうるが、間（あわい）と余白を生むためには、身体的なアンカーが必要である。</div>
+      </div>
+    </div>
+
+    <p>
+      シナリオBが「推奨」である理由は、それが最も現実的だからではなく、最も神学的に整合的だからである。生成事象神学は、出来事の生起を「場所・身体・共同体」という具体的な文脈の中に位置づける。制度を失っても出来事は続く。しかし身体性と地域性を失えば、出来事そのものが希薄化する危険がある。
+    </p>
+
+    <h2 class="section-heading" id="s7" data-num="六">介入の地図——どこに、何を、どのように</h2>
+
+    <p>
+      三つのシナリオの中でシナリオBを選択するならば、具体的に「どこに、何を、どのように」介入するかの設計が必要になる。JPCDPのデータは、この設計のための地図を提供する。
+    </p>
+
+    <div class="intervention-list" aria-label="地域別介入設計">
+      <div class="intervention-header">地域別　優先介入設計（JPCDPデータに基づく）</div>
+      <div class="intervention-item">
+        <div class="intv-region">北海道・東北<br>農村過疎地</div>
+        <div class="intv-challenge">
+          <strong>課題：</strong>制度的教会のリーチなし。しかしMSI五軸は豊か。<br>
+          <strong>介入：</strong>新篠津モデルの横展開。BroadListeningシステムの農村版実装。脱記号化共同体の試験的設置。光ファイバーを活用した遠隔PK-Ring形成。農業・漁業コミュニティとの縁（ふち）形成。
+        </div>
+        <div class="intv-tool">DAO型<br>BroadListening</div>
+      </div>
+      <div class="intervention-item">
+        <div class="intv-region">関東・近畿<br>大都市圏</div>
+        <div class="intv-challenge">
+          <strong>課題：</strong>教会はあるが孤立。匿名性と孤立が共存。教会間の協力なし。<br>
+          <strong>介入：</strong>JPCDPを用いた教会間PK-Ringの形成。教会横断的な三リング設計。デジタル民主主義ツールによる都市型BroadListening。若年層への縁（ふち）形成のためのSNS・コミュニティスペース活用。
+        </div>
+        <div class="intv-tool">三リング<br>JPCDP連携</div>
+      </div>
+      <div class="intervention-item">
+        <div class="intv-region">九州<br>潜伏キリシタン地域</div>
+        <div class="intv-challenge">
+          <strong>課題：</strong>歴史的記憶の宝庫だが現代への接続が弱い。<br>
+          <strong>介入：</strong>MINISTによる潜伏キリシタンの証言アーカイブ化。「礼拝堂なき信仰」の歴史的先例を現代宣教論へ接続。世界遺産化された記憶を、生きた神学的資源として再活性化。
+        </div>
+        <div class="intv-tool">MINIST<br>証言アーカイブ</div>
+      </div>
+      <div class="intervention-item">
+        <div class="intv-region">四国・山陰<br>巡礼・静寂地域</div>
+        <div class="intv-challenge">
+          <strong>課題：</strong>宗教的土台はあるが教会との接触なし。<br>
+          <strong>介入：</strong>四国遍路の霊的旅との神学的対話。シャバット神学と巡礼霊性の接触面設計。余白の文化を持つ地域への「余白の宣教」。ヘシェル的な「時間の建築」としての霊的プログラム提供。
+        </div>
+        <div class="intv-tool">余白設計<br>霊的対話</div>
+      </div>
+      <div class="intervention-item">
+        <div class="intv-region">沖縄・離島<br>辺縁・独自文化</div>
+        <div class="intv-challenge">
+          <strong>課題：</strong>独自の霊性文化（ユタ・ノロ）との摩擦。基地問題・歴史的傷。<br>
+          <strong>介入：</strong>辺縁からの平和神学の実践。文化的縁（ふち）を大切にしながらの対話型宣教。強制でなく出来事への開放としての広聴。先住文化霊性との脱記号化的対話。
+        </div>
+        <div class="intv-tool">対話型<br>平和宣教</div>
+      </div>
+    </div>
+
+    <h2 class="section-heading" id="s8" data-num="七">三段階の実装計画——R7からR12への道</h2>
+
+    <p>
+      介入設計を実行可能な計画として落とし込むために、令和7年（2025年）から令和12年（2030年）の五年間を三段階に分けて設計する。
+    </p>
+
+    <div class="timeline" aria-label="三段階実装計画">
+      <div class="timeline-header">JPCDP三段階実装計画　R7〜R12</div>
+      <div class="timeline-phases">
+        <div class="tl-phase">
+          <div class="tl-phase-label">PHASE 1</div>
+          <div class="tl-phase-period">R7〜R8（2025–2026）</div>
+          <div class="tl-phase-name">基盤構築期</div>
+          <ul class="tl-items">
+            <li class="tl-item">JPCDPデータの全国標準化完了</li>
+            <li class="tl-item">新篠津モデルの記録と文書化</li>
+            <li class="tl-item">BroadListening農村版プロトタイプ</li>
+            <li class="tl-item">MINIST記録システムの試験運用</li>
+            <li class="tl-item">三地域でのDAO型共同体パイロット</li>
+          </ul>
+        </div>
+        <div class="tl-phase">
+          <div class="tl-phase-label">PHASE 2</div>
+          <div class="tl-phase-period">R9〜R10（2027–2028）</div>
+          <div class="tl-phase-name">横展開期</div>
+          <ul class="tl-items">
+            <li class="tl-item">パイロット知見の全国共有</li>
+            <li class="tl-item">JPCDPへのBroadListening統合</li>
+            <li class="tl-item">九州証言アーカイブの本格展開</li>
+            <li class="tl-item">教派横断的PK-Ring形成</li>
+            <li class="tl-item">MSIブレンドの定期評価開始</li>
+          </ul>
+        </div>
+        <div class="tl-phase">
+          <div class="tl-phase-label">PHASE 3</div>
+          <div class="tl-phase-period">R11〜R12（2029–2030）</div>
+          <div class="tl-phase-name">統合・自律期</div>
+          <ul class="tl-items">
+            <li class="tl-item">脱記号化共同体ネットワークの自律運営</li>
+            <li class="tl-item">制度的教会との補完関係の制度化</li>
+            <li class="tl-item">JPCDP第二世代プラットフォーム展開</li>
+            <li class="tl-item">アジア太平洋地域への横展開検討</li>
+            <li class="tl-item">神学校・研究機関との連携確立</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-heading" id="s9" data-num="結び">地図の外へ——地図が描けない神の出来事</h2>
+
+    <p>
+      「見よ、わたしは新しいことを行う。今や、それは芽生えている。あなたがたはそれを認めないのか。」
+    </p>
+
+    <p>
+      イザヤが語ったこの言葉は、捕囚のバビロンで絶望した民に向けられた。神殿は破壊され、礼拝はできず、祭司は散り散りになった。制度のすべてが失われた後で、神は言う——「わたしは新しいことを行う」と。
+    </p>
+
+    <p>
+      JPCDPの地図は、現在の教会の地形を示す。それは重要な道具である。しかし神の出来事は、地図の点の上にだけ起きるわけではない。白地の上にこそ、まだ記録されていない神の働きが進行している。荒れ野に道が敷かれている。砂漠に川が流れている。それを「認める」ためには、地図だけでなく、地図の外を歩く勇気が必要だ。
+    </p>
+
+    <p>
+      新篠津村の田んぼの真ん中は、地図の白地である。教会の点はない。しかしそこで今日も、神の出来事は起きている。隣の老農家が食卓を共にする出来事に。夜空の星を一緒に見上げる出来事に。光ファイバーを通じて届いた一言の声に。これらは地図に描けない。しかし神はそこにいる。
+    </p>
+
+    <p>
+      次章では、この旅全体を振り返り、NSPPTフレームワークの総合的な神学的評価を行う。本書が提案してきた「生成事象神学に基づく脱記号化教会論」の射程と限界を誠実に問い直し、「空の鳥」の問いへの最終的な応答を試みる。
+    </p>
+
+  </div>
+
+  <aside class="footnote-area" aria-label="注">
+    <div class="footnote-title">注　および参考文献（第七章）</div>
+    <p class="footnote-item">*1　JPCDPのデータは、日本キリスト教団・日本バプテスト連盟・日本福音同盟加盟各教派の公開資料、および文化庁「宗教年鑑」（令和6年度版）を主要ソースとして統合している。教派別の集計方法の差異により、数値には±10%程度の誤差がありうる。</p>
+    <p class="footnote-item">*2　MSIブレンド（Mission Status Index Blend）は著者が提案する独自の複合指標であり、既存の宣教学的指標（Joshua Project の「Frontier People Group」指標等）を参照しつつ、生成事象神学的な文脈で再構成したものである。</p>
+    <p class="footnote-item">*3　潜伏キリシタンの神学的意義については、Haruko Nawata Ward, "Women Religious Leaders in Japan's Christian Century 1549–1650"（2009）、および宮崎賢太郎『カクレキリシタン』（1996）を参照。「礼拝堂なき信仰の二世紀」は、脱記号化教会論の最も鮮明な歴史的先例である。</p>
+    <p class="footnote-item">*4　四国八十八カ所遍路と霊性の関係については、Ian Reader, "Making Pilgrimages: Meaning and Practice in Shikoku"（2005）を参照。遍路の「歩く余白」と本書のシャバット神学の接触可能性については、第六章の論述を参照。</p>
+    <p class="footnote-item">*5　「R7〜R12実装計画」は、新篠津村の人口減少対策計画（R8〜R12）と並走する形で設計されており、村行政との協働可能性を念頭に置いている。具体的な連携形態については現在交渉中であり、本書刊行時点での進捗状況は著者のウェブサイトを参照。</p>
+  </aside>
+
+  <div class="word-count-info" aria-label="本文情報">
+    本文：約 <span id="char-count">0</span> 字　｜　推定読了時間：<span id="read-minutes">0</span> 分
+  </div>
+
+  <nav class="chapter-nav" aria-label="章ナビゲーション">
+    <a href="nsppt_chapter6_reader.html" class="nav-btn">
+      <span class="nav-label">◀ 前の章</span>
+      <span class="nav-title">第六章　脱記号化教会の制度設計</span>
+    </a>
+    <a href="nsppt_chapter8_final.html" class="nav-btn next">
+      <span class="nav-label">次の章 ▶</span>
+      <span class="nav-title">第八章（終章）　空の鳥への応答——脱記号化教会論の総括と展望</span>
+    </a>
+  </nav>
+
+</main>
+
+<script>
+  let fontSize=17,lh=2.1;
+  const body=document.body,fontDisplay=document.getElementById('font-size-display');
+  document.getElementById('font-up').addEventListener('click',()=>{if(fontSize<24){fontSize++;body.style.fontSize=fontSize+'px';fontDisplay.textContent=fontSize}});
+  document.getElementById('font-down').addEventListener('click',()=>{if(fontSize>13){fontSize--;body.style.fontSize=fontSize+'px';fontDisplay.textContent=fontSize}});
+  document.getElementById('lh-up').addEventListener('click',()=>{if(lh<2.8){lh=Math.round((lh+.2)*10)/10;body.style.lineHeight=lh}});
+  document.getElementById('lh-down').addEventListener('click',()=>{if(lh>1.6){lh=Math.round((lh-.2)*10)/10;body.style.lineHeight=lh}});
+  const darkBtn=document.getElementById('dark-toggle');
+  darkBtn.addEventListener('click',()=>{body.classList.toggle('dark');darkBtn.textContent=body.classList.contains('dark')?'☀':'☾';darkBtn.classList.toggle('active',body.classList.contains('dark'))});
+  const progressBar=document.getElementById('progress-bar');
+  window.addEventListener('scroll',()=>{const pct=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100;progressBar.style.width=Math.min(pct,100)+'%'},{passive:true});
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));const t=document.querySelector(`.toc-item[data-section="${e.target.id}"]`);if(t)t.classList.add('active')}})},{rootMargin:'-20% 0px -60% 0px'});
+  document.querySelectorAll('[id^="s"]').forEach(s=>obs.observe(s));
+  const prose=document.querySelector('.prose');
+  if(prose){const count=(prose.innerText||'').replace(/\s/g,'').length;document.getElementById('char-count').textContent=count.toLocaleString('ja-JP');const mins=Math.ceil(count/400);document.getElementById('read-minutes').textContent=mins;document.getElementById('read-time-label').textContent=`残り約${mins}分`}
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'})}})});
+</script>
+</body>
+</html>

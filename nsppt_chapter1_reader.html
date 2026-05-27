@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>空の鳥を見なさい｜第1章｜脱記号化教会論</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500&family=Shippori+Antique+B1&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f1ea;
+    --bg-warm: #ece7db;
+    --paper: #f9f6ef;
+    --ink: #1c1810;
+    --ink-soft: #362e20;
+    --ink-muted: #74685a;
+    --accent: #4a6741;
+    --accent-warm: #8b5e3c;
+    --rule: #c8bfae;
+    --highlight: #e4dcd0;
+    --font-base: 17px;
+    --line-height: 2.1;
+    --side-pad: clamp(24px, 8vw, 120px);
+    --chapter-width: 700px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
+    font-size: var(--current-size);
+    line-height: var(--line-height);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  body.dark {
+    --bg: #100e0a;
+    --bg-warm: #1a1812;
+    --paper: #201c16;
+    --ink: #e8e0d0;
+    --ink-soft: #c4baa8;
+    --ink-muted: #78685a;
+    --accent: #82a878;
+    --accent-warm: #c4956a;
+    --rule: #3a3020;
+    --highlight: #2a2418;
+  }
+
+  /* ── TOOLBAR ── */
+  #toolbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 52px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 12px;
+    z-index: 100;
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .tool-label {
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .tool-btn {
+    background: var(--bg-warm);
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+    padding: 5px 13px;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.15s;
+    white-space: nowrap;
+    min-height: 32px;
+    min-width: 32px;
+  }
+  .tool-btn:hover { background: var(--highlight); color: var(--ink); }
+  .tool-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .tool-sep { width: 1px; height: 24px; background: var(--rule); margin: 0 4px; }
+  .tool-spacer { flex: 1; }
+
+  #font-size-display {
+    font-size: 12px;
+    color: var(--ink-muted);
+    min-width: 28px;
+    text-align: center;
+  }
+
+  /* ── PROGRESS BAR ── */
+  #progress-bar {
+    position: fixed;
+    top: 52px; left: 0;
+    height: 2px;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.1s linear;
+    z-index: 99;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  #main {
+    max-width: var(--chapter-width);
+    margin: 0 auto;
+    padding: 96px var(--side-pad) 120px;
+    transition: padding 0.3s;
+  }
+
+  /* ── BOOK META ── */
+  .book-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 56px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .book-meta-chapter {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+  }
+
+  .book-meta-sep { color: var(--rule); }
+
+  .book-meta-title {
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-weight: 400;
+  }
+
+  /* ── CHAPTER HEADER ── */
+  .chapter-header { margin-bottom: 64px; }
+
+  .chapter-number {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .chapter-title {
+    font-family: 'Shippori Antique B1', 'Shippori Mincho', serif;
+    font-size: clamp(28px, 5vw, 40px);
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--ink);
+    letter-spacing: 0.06em;
+    margin-bottom: 24px;
+  }
+
+  .chapter-subtitle {
+    font-size: 15px;
+    color: var(--ink-muted);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    border-left: 2px solid var(--accent);
+    padding-left: 16px;
+    line-height: 1.7;
+  }
+
+  /* ── SCRIPTURE BLOCK ── */
+  .scripture {
+    background: var(--bg-warm);
+    border-left: 3px solid var(--accent);
+    padding: 28px 32px;
+    margin: 48px 0;
+    border-radius: 0 4px 4px 0;
+    position: relative;
+  }
+
+  .scripture::before {
+    content: '✦';
+    position: absolute;
+    top: 20px; right: 20px;
+    color: var(--accent);
+    opacity: 0.3;
+    font-size: 18px;
+  }
+
+  .scripture-text {
+    font-size: 1.05em;
+    line-height: 1.9;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+
+  .scripture-ref {
+    font-size: 0.85em;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── BODY TEXT ── */
+  .prose p {
+    margin-bottom: 1.6em;
+    text-align: justify;
+    text-justify: inter-ideograph;
+    hanging-punctuation: first last;
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  .prose p.lead {
+    font-size: 1.08em;
+    color: var(--ink-soft);
+    line-height: 2.2;
+    margin-bottom: 2em;
+  }
+
+  /* ── SECTION HEADINGS ── */
+  .section-heading {
+    font-family: 'Shippori Antique B1', 'Shippori Mincho', serif;
+    font-size: 1.2em;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: 0.08em;
+    margin: 64px 0 28px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .section-heading::before {
+    content: attr(data-num);
+    font-size: 0.7em;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    font-family: 'Shippori Mincho', serif;
+    min-width: 28px;
+  }
+
+  /* ── CONCEPT BOX ── */
+  .concept-box {
+    border: 1px solid var(--rule);
+    padding: 28px 32px;
+    margin: 48px 0;
+    background: var(--paper);
+    position: relative;
+  }
+
+  .concept-box-label {
+    position: absolute;
+    top: -10px; left: 20px;
+    background: var(--paper);
+    padding: 0 8px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+  }
+
+  .concept-box-title {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 14px;
+    color: var(--ink);
+    letter-spacing: 0.06em;
+  }
+
+  .concept-box p {
+    font-size: 0.93em;
+    color: var(--ink-soft);
+    line-height: 2.0;
+    margin-bottom: 0.8em;
+  }
+  .concept-box p:last-child { margin-bottom: 0; }
+
+  /* ── PULL QUOTE ── */
+  .pull-quote {
+    margin: 56px 0;
+    text-align: center;
+    position: relative;
+  }
+
+  .pull-quote-text {
+    font-family: 'Shippori Antique B1', 'Shippori Mincho', serif;
+    font-size: clamp(17px, 3vw, 22px);
+    color: var(--ink-soft);
+    line-height: 1.9;
+    letter-spacing: 0.08em;
+    padding: 0 24px;
+    position: relative;
+    display: inline-block;
+  }
+
+  .pull-quote-text::before,
+  .pull-quote-text::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--accent);
+    margin: 16px auto;
+  }
+
+  /* ── FOOTNOTE ── */
+  .footnote-area {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .footnote-title {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--ink-muted);
+    margin-bottom: 20px;
+  }
+
+  .footnote-item {
+    font-size: 0.85em;
+    color: var(--ink-muted);
+    line-height: 1.8;
+    margin-bottom: 10px;
+    padding-left: 24px;
+    text-indent: -24px;
+  }
+
+  /* ── CHAPTER NAV ── */
+  .chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 96px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+    gap: 16px;
+  }
+
+  .nav-btn {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    text-decoration: none;
+    color: inherit;
+    padding: 16px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    min-width: 180px;
+    background: var(--paper);
+  }
+  .nav-btn:hover { opacity: 1; background: var(--highlight); }
+  .nav-btn.disabled { opacity: 0.25; pointer-events: none; }
+
+  .nav-label { font-size: 10px; letter-spacing: 0.15em; color: var(--ink-muted); }
+  .nav-title { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+  .nav-btn.next { text-align: right; }
+
+  /* ── WORD COUNT INFO ── */
+  .word-count-info {
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-muted);
+    margin-top: 32px;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── SIDEBAR TOC (large screens) ── */
+  #toc {
+    position: fixed;
+    left: 24px;
+    top: 80px;
+    width: 180px;
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  @media (min-width: 1200px) {
+    #toc { display: flex; }
+    body { padding-left: 0; }
+  }
+
+  .toc-item {
+    font-size: 11px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+    padding: 4px 8px;
+    border-left: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: block;
+  }
+  .toc-item:hover { color: var(--ink); border-left-color: var(--rule); }
+  .toc-item.active { color: var(--accent); border-left-color: var(--accent); }
+
+  .toc-header {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+    padding-left: 10px;
+    opacity: 0.6;
+  }
+
+  /* ── RUBY ── */
+  ruby rt { font-size: 0.5em; }
+
+  /* ── SELECTION STYLE ── */
+  ::selection { background: var(--accent); color: #fff; }
+
+  /* ── FOCUS VISIBLE ── */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  #main > * {
+    animation: fadeUp 0.6s ease both;
+  }
+  .book-meta { animation-delay: 0.05s; }
+  .chapter-header { animation-delay: 0.15s; }
+  .prose { animation-delay: 0.25s; }
+
+  /* ── PRINT ── */
+  @media print {
+    #toolbar, #toc, #progress-bar { display: none; }
+    #main { padding-top: 32px; }
+    .chapter-nav { display: none; }
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 600px) {
+    #main { padding: 80px 20px 80px; }
+    .scripture { padding: 20px 20px; }
+    .concept-box { padding: 20px 20px; }
+    .chapter-nav { flex-direction: column; }
+    .nav-btn { width: 100%; min-width: unset; }
+    .nav-btn.next { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div id="toolbar" role="toolbar" aria-label="読書設定">
+  <span class="tool-label">文字</span>
+  <button class="tool-btn" id="font-down" aria-label="文字を小さく" title="文字を小さく">A−</button>
+  <span id="font-size-display">17</span>
+  <button class="tool-btn" id="font-up" aria-label="文字を大きく" title="文字を大きく">A＋</button>
+  <div class="tool-sep"></div>
+  <span class="tool-label">行間</span>
+  <button class="tool-btn" id="lh-down" aria-label="行間を狭く">≡</button>
+  <button class="tool-btn" id="lh-up" aria-label="行間を広く">≡ ≡</button>
+  <div class="tool-sep"></div>
+  <button class="tool-btn" id="dark-toggle" aria-label="ダーク/ライト切替" title="ダークモード切替">☾</button>
+  <div class="tool-spacer"></div>
+  <span class="tool-label" id="read-time-label" style="font-size:11px;"></span>
+  <div class="tool-sep"></div>
+  <button class="tool-btn" onclick="window.print()" aria-label="印刷" title="印刷">⎙</button>
+</div>
+
+<div id="progress-bar" role="progressbar" aria-label="読書進捗"></div>
+
+<!-- TOC (desktop only) -->
+<nav id="toc" aria-label="節目次">
+  <div class="toc-header">目次</div>
+  <a href="#s1" class="toc-item" data-section="s1">序　鳥の不在</a>
+  <a href="#s2" class="toc-item" data-section="s2">一　記号としての教会</a>
+  <a href="#s3" class="toc-item" data-section="s3">二　鳥は何を知らないか</a>
+  <a href="#s4" class="toc-item" data-section="s4">三　あわいの神学</a>
+  <a href="#s5" class="toc-item" data-section="s5">四　脱記号化の出発</a>
+  <a href="#s6" class="toc-item" data-section="s6">結び　空の縁へ</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main id="main">
+
+  <!-- BOOK META -->
+  <div class="book-meta" aria-label="書誌情報">
+    <span class="book-meta-chapter">第一章</span>
+    <span class="book-meta-sep">｜</span>
+    <span class="book-meta-title">生成事象神学に基づく脱記号化教会論</span>
+  </div>
+
+  <!-- CHAPTER HEADER -->
+  <header class="chapter-header">
+    <span class="chapter-number">CHAPTER 01</span>
+    <h1 class="chapter-title">空の鳥を見なさい</h1>
+    <p class="chapter-subtitle">
+      象徴を持たない存在と、教会の臨界点について
+    </p>
+  </header>
+
+  <!-- SCRIPTURE -->
+  <blockquote class="scripture" aria-label="聖書箇所">
+    <p class="scripture-text">
+      空の鳥を見なさい。種も蒔かず、刈り入れもせず、倉に納めもしない。<br>
+      それでも、あなたがたの天の父は鳥を養ってくださる。<br>
+      あなたがたは鳥よりもはるかに価値があるではないか。
+    </p>
+    <footer class="scripture-ref">マタイによる福音書 6:26（新共同訳）</footer>
+  </blockquote>
+
+  <!-- PROSE -->
+  <div class="prose">
+
+    <p class="lead" id="s1">
+      教会から、鳥の声が聞こえなくなって久しい。正確に言えば、鳥はずっとそこにいる。礼拝堂の屋根を巣にして、会堂の周囲を舞い続けている。聞こえなくなったのは、教会のほうだ。
+    </p>
+
+    <p>
+      日本のプロテスタント教会は現在、深刻な臨界点に立っている。信徒の高齢化、礼拝出席者数の継続的な減少、地方都市における会堂の閉鎖。数字が語る現実は厳しい。しかしこの本が問いたいのは、その数字の背後にある、より根本的な問いである。
+    </p>
+
+    <p>
+      なぜ教会は「教会」でなければならないのか。
+    </p>
+
+    <p>
+      この問いは、無神論的な挑発ではない。むしろ、真摯に福音を信じる者が、正直に立ち止まったとき、必然的に突き当たる問いである。礼拝堂、十字架、週報、聖餐式、牧師という肩書き——これらのすべてが「教会」を指示するために機能している。それ自体に問題はない。だが問題は、これらの記号が、指示すべき「神との出会い」そのものに取って代わってしまう瞬間に起きる。
+    </p>
+
+    <h2 class="section-heading" id="s2" data-num="一">記号としての教会——象徴体制の臨界</h2>
+
+    <p>
+      記号論の文脈でいえば、教会は一種の「シニフィアン（意味するもの）」の集積体として機能する。建物、礼拝形式、宗教言語、慣習——これらはすべて、神との関係という「シニフィエ（意味されるもの）」を指し示すために設計されている。しかし思想家ジャン・ボードリヤールが「シミュラークル」と呼んだように、記号は時として、それが指示するはずの現実を吸収し、代替してしまう。
+    </p>
+
+    <p>
+      日本の教会が経験しているのは、まさにこの「記号の自律化」ではないか。礼拝を守ることが信仰の証明となり、教会員であることが救いの保証となり、牧師の説教を聞くことが神の言葉の受容とみなされる。もちろんこれらは完全に誤りではない。問題は、これらの記号的な実践が、神との生きた出会いという出来事から徐々に乖離し、形式だけが自己増殖してゆく時である。
+    </p>
+
+    <div class="concept-box" aria-label="概念説明">
+      <span class="concept-box-label">KEY CONCEPT</span>
+      <div class="concept-box-title">象徴体制（Symbol Regime）</div>
+      <p>
+        特定の共同体が、神・救い・信仰といった概念を、ある記号体系（建物・儀礼・言語・肩書き）によって固定的に表象するシステム。このシステムが自律化した状態を、本書では「象徴体制の硬直」と呼ぶ。
+      </p>
+      <p>
+        脱記号化とは、この体制を否定することではなく、記号と出来事のあいだに生じた「亀裂（あわい）」に気づき、その亀裂を神の働く場として再発見することである。
+      </p>
+    </div>
+
+    <p>
+      現代日本において、「教会」という言葉を聞いて人々が想像するものは、概ね一致している。白い壁、ステンドグラス、あるいは少なくとも十字架の付いた建物。週一回の集会。歌とお祈り。聖書を読む人々。これらのイメージは、教会の本質ではなく、教会の記号である。
+    </p>
+
+    <p>
+      問題は、記号に親しみを持てない人々——日本人口の99%以上——にとって、教会の扉が実質的に閉じていることにある。記号への親和性がなければ、その内側で起きている出来事（神との出会い、共同体の形成、生の意味の発見）にアクセスする機会すら与えられない。
+    </p>
+
+    <h2 class="section-heading" id="s3" data-num="二">鳥は何を知らないか——象徴なき存在の神学</h2>
+
+    <p>
+      「空の鳥を見なさい」とイエスは言った。
+    </p>
+
+    <p>
+      この言葉の文脈は、しばしば「思い煩うな」という倫理的勧告として読まれる。しかし別の角度から読み直したとき、そこに神学的な豊穣さが浮かび上がる。鳥は、象徴を持たない。鳥は、自分が「生き物」であるという概念を持たない。種の保存という「意味」を理解しない。神を礼拝するという宗教的行為も持たない。
+    </p>
+
+    <p>
+      それでも天の父は鳥を養う。
+    </p>
+
+    <p>
+      ここに、神の働きの根本的な性格が示されている。神の恵みは、象徴的な仲介を必要としない。神と被造物のあいだの関係は、記号の網の目を通らなくても成立する。鳥は礼拝しないが、神に養われる。鳥は聖書を読まないが、神の摂理のなかに包まれている。
+    </p>
+
+    <div class="pull-quote" aria-label="引用">
+      <div class="pull-quote-text">
+        神の働きは、記号の外で起きている。<br>
+        教会の仕事は、その「外」に気づくことから始まる。
+      </div>
+    </div>
+
+    <p>
+      これは反知性主義でも、反制度主義でもない。象徴的・制度的な教会の価値を否定することは、この本の目的ではない。むしろこの本が示したいのは、制度的教会が弱体化しているこの時代に、神の働きはどこで継続しているのか——という問いである。
+    </p>
+
+    <p>
+      鳥は、教会のない場所に生きている。神は、鳥のいる場所に働いている。ならば神は、教会のない場所にも働いているはずである。この単純な推論が、本書全体の出発点となる。
+    </p>
+
+    <h2 class="section-heading" id="s4" data-num="三">あわい——臨界の神学的可能性</h2>
+
+    <p>
+      「<ruby>あわい<rt>間</rt></ruby>」という日本語は、二つのものの「あいだ」を指す。空間的な隙間であり、時間的な猶予であり、関係的な余白である。本書のタイトルに込められたこの言葉は、単なる修辞ではない。
+    </p>
+
+    <p>
+      教会と社会のあわい。信仰と不信仰のあわい。記号と出来事のあわい。制度と生命のあわい。この「あいだ」にこそ、今日の神学的思考が住まうべき場所があると、筆者は考える。
+    </p>
+
+    <p>
+      臨界点とは、通常「崩壊の瀬戸際」として否定的に語られる。しかし物理学的に正確に言えば、臨界とは「相転移が起きる境界」である。水が氷になる瞬間、液体が気体になる瞬間——状態が根本的に変化するその境界こそが、臨界点である。日本のプロテスタント教会が立つ「臨界点」を、筆者は崩壊の予兆としてではなく、相転移の可能性として読み解きたい。
+    </p>
+
+    <div class="concept-box" aria-label="概念説明">
+      <span class="concept-box-label">KEY CONCEPT</span>
+      <div class="concept-box-title">Hebel³（ヘベルキューブ）——神学的空間の三位一体</div>
+      <p>
+        <strong>縁（ふち）</strong>：出会いの場。偶然のようでいて、神の摂理として読み解かれうる接続点。
+      </p>
+      <p>
+        <strong>間（あわい）</strong>：余地。記号と出来事のあいだにある、解釈されていない生の空間。
+      </p>
+      <p>
+        <strong>余白（よはく）</strong>：沈黙と待機。応答の前に必要な、開かれた非決定の時間。
+      </p>
+      <p>
+        この三つは、教会論的には「宣教・共同体・安息」に対応し、神学的には「派遣・臨在・聖別」に対応する構造を持つ。
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="s5" data-num="四">脱記号化の出発——何を失い、何を得るか</h2>
+
+    <p>
+      脱記号化（De-symbolization）とは、記号を捨てることではない。むしろ、記号と、記号が指し示すべき「出来事」との関係を、絶えず問い直す営みである。
+    </p>
+
+    <p>
+      十字架は依然として十字架でありうる。しかしそれが「キリスト教の目印」として機能するだけでなく、「ここで死と復活の出来事が現在も起きている」という生きた証言として機能しているか——この問いを手放さないことが、脱記号化の実践である。
+    </p>
+
+    <p>
+      この問いは、信仰の弱体化ではなく、信仰の深化を意味する。記号を信じることから、記号が指し示す出来事を信じることへ。制度への参加から、神との生きた関係への。この移行は、既存の教会を否定するのではなく、既存の教会の内側から、あるいはその外側の「あわい」から、新しい形で起きうる。
+    </p>
+
+    <p>
+      北海道・新篠津村のような過疎地において、筆者はこの問いと日々格闘している。礼拝堂はない。牧師もいない。日曜の集会もない。しかしここには人がいて、関係があり、喜びと苦しみがあり、助け合いがある。神はここにも働いているか。答えは、もちろん「はい」である。では、神の働きをここで可視化し、深め、共同体として育てるために、何が必要か——これが、本書が追求する実践的問いである。
+    </p>
+
+    <h2 class="section-heading" id="s6" data-num="結び">空の縁へ——第一歩</h2>
+
+    <p>
+      「空の鳥を見なさい」とイエスは言った。
+    </p>
+
+    <p>
+      この命令の形式に注目したい。これは「鳥のように生きなさい」ではない。「鳥について学びなさい」でもない。「見なさい」——ただ、見ることを求めている。
+    </p>
+
+    <p>
+      見ることは、最初の神学的行為である。記号を脱して出来事と向き合う最初の身振りは、ただ、見ることである。教会の外に出て、空を見上げ、鳥を目で追うこと。そこにある沈黙に耳を澄ますこと。その沈黙が、余白（よはく）であり、神の語りかけの前の間（あわい）である。
+    </p>
+
+    <p>
+      本書は、その「見ること」から始まる神学的旅の記録である。同時に、その旅を再現可能な実践として設計するための、教会論的設計図でもある。
+    </p>
+
+    <p>
+      第二章以降、私たちは「生成事象神学」の核心へと歩みを進める。神は存在ではなく出来事として、静止した実体ではなく絶えず生起する動的な関わりとして、どのように理解されうるのか。そしてその理解が、教会の形、共同体の設計、宣教の実践に、どのような変容をもたらしうるのか。
+    </p>
+
+    <p>
+      まず、鳥を見ることから始めよう。
+    </p>
+
+  </div><!-- /prose -->
+
+  <!-- FOOTNOTES -->
+  <aside class="footnote-area" aria-label="注">
+    <div class="footnote-title">注　および参考文献（第一章）</div>
+    <p class="footnote-item">*1　ジャン・ボードリヤール『シミュラークルとシミュレーション』（1981）。記号が現実を先取りし、現実に取って代わる「ハイパーリアル」の概念は、宗教的象徴論に応用可能な射程を持つ。</p>
+    <p class="footnote-item">*2　「脱記号化（De-symbolization）」の語は、フィリップ・ジラール（神学）およびロラン・バルト（記号論）の議論を参照しつつ、本書独自の文脈で用いる。</p>
+    <p class="footnote-item">*3　「生成事象神学（Generative Event Theology）」については第二章で詳述するが、その原型はアルフレッド・ノース・ホワイトヘッドの過程神学、およびカール・バルトの「神の出来事（das Ereignis Gottes）」概念に見出しうる。</p>
+    <p class="footnote-item">*4　「Hebel³（ヘベルキューブ）」（縁・間・余白）は、日本語の空間感覚と、プロテスタント神学の伝道・共同体・聖化の三位一体的構造を架橋するための、著者による造語的概念である。</p>
+  </aside>
+
+  <!-- WORD COUNT -->
+  <div class="word-count-info" aria-label="本文情報">
+    本文：約 <span id="char-count">0</span> 字　｜　推定読了時間：<span id="read-minutes">0</span> 分
+  </div>
+
+  <!-- CHAPTER NAVIGATION -->
+  <nav class="chapter-nav" aria-label="章ナビゲーション">
+    <a href="index.html" class="nav-btn">
+      <span class="nav-label">◀ 前の章</span>
+      <span class="nav-title">序章　この本を書く理由</span>
+    </a>
+    <a href="nsppt_chapter2_reader.html" class="nav-btn next">
+      <span class="nav-label">次の章 ▶</span>
+      <span class="nav-title">第二章　神は出来事である——生成事象神学の核心</span>
+    </a>
+  </nav>
+
+</main>
+
+<script>
+  // ── FONT SIZE ──
+  let fontSize = 17;
+  const fontDisplay = document.getElementById('font-size-display');
+  const body = document.body;
+
+  document.getElementById('font-up').addEventListener('click', () => {
+    if (fontSize < 24) { fontSize += 1; applyFont(); }
+  });
+  document.getElementById('font-down').addEventListener('click', () => {
+    if (fontSize > 13) { fontSize -= 1; applyFont(); }
+  });
+  function applyFont() {
+    body.style.fontSize = fontSize + 'px';
+    fontDisplay.textContent = fontSize;
+  }
+
+  // ── LINE HEIGHT ──
+  let lh = 2.1;
+  document.getElementById('lh-up').addEventListener('click', () => {
+    if (lh < 2.8) { lh = Math.round((lh + 0.2) * 10) / 10; applyLH(); }
+  });
+  document.getElementById('lh-down').addEventListener('click', () => {
+    if (lh > 1.6) { lh = Math.round((lh - 0.2) * 10) / 10; applyLH(); }
+  });
+  function applyLH() {
+    body.style.lineHeight = lh;
+  }
+
+  // ── DARK MODE ──
+  const darkBtn = document.getElementById('dark-toggle');
+  darkBtn.addEventListener('click', () => {
+    body.classList.toggle('dark');
+    darkBtn.textContent = body.classList.contains('dark') ? '☀' : '☾';
+    darkBtn.classList.toggle('active', body.classList.contains('dark'));
+  });
+
+  // ── PROGRESS BAR ──
+  const progressBar = document.getElementById('progress-bar');
+  function updateProgress() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = pct + '%';
+    progressBar.setAttribute('aria-valuenow', Math.round(pct));
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  // ── TOC ACTIVE ──
+  const sections = document.querySelectorAll('[id^="s"]');
+  const tocItems = document.querySelectorAll('.toc-item');
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        tocItems.forEach(t => t.classList.remove('active'));
+        const t = document.querySelector(`.toc-item[data-section="${e.target.id}"]`);
+        if (t) t.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -60% 0px' });
+
+  sections.forEach(s => obs.observe(s));
+
+  // ── WORD COUNT ──
+  function countChars() {
+    const prose = document.querySelector('.prose');
+    if (!prose) return;
+    const text = prose.innerText || '';
+    const count = text.replace(/\s/g, '').length;
+    document.getElementById('char-count').textContent = count.toLocaleString('ja-JP');
+    const minutes = Math.ceil(count / 400); // 日本語400字/分
+    document.getElementById('read-minutes').textContent = minutes;
+    document.getElementById('read-time-label').textContent = `残り約${minutes}分`;
+  }
+  countChars();
+
+  // ── SMOOTH TOC SCROLL ──
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
